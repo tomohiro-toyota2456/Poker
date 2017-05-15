@@ -11,6 +11,9 @@
         GameObject touchCollision;
         [SerializeField]
         FadeObject[] fadeObject;
+        [SerializeField]
+        string startLoadName;
+
         bool isLoading = false;//
         bool isInitialize = false;
 
@@ -24,6 +27,7 @@
         // Use this for initialization
         void Start()
         {
+         ChangeScene(startLoadName, 0);
         }
 
 
