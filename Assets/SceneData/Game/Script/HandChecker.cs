@@ -152,7 +152,7 @@ public class HandChecker
 
   //フラッシュチェック
   //マークが一つでも違えばfalseを返す
-  public bool CheckFlush(TrumpData[] _handArray)
+  bool CheckFlush(TrumpData[] _handArray)
   {
     for(int i = 1; i < _handArray.Length; i++)
     {
@@ -166,9 +166,9 @@ public class HandChecker
   }
 
   //　false = 0 true = 1 特殊ストレート 2
-  public int CheckStraight(TrumpData[] _handArray)
+  int CheckStraight(TrumpData[] _handArray)
   {
-    TrumpData[] clone = null;
+    TrumpData[] clone = new TrumpData[_handArray.Length]; 
     _handArray.CopyTo(clone, 0);
 
     //数値が低い順にソート

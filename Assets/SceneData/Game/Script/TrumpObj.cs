@@ -54,6 +54,7 @@ public class TrumpObj : MonoBehaviour
   //移動用
   public void Move(bool isDistribute,float _time,Action _endAction)
   {
+    button.gameObject.SetActive(true);
     Vector2 sPos;
     Vector2 tPos;
 
@@ -88,6 +89,11 @@ public class TrumpObj : MonoBehaviour
 
         if (_endAction != null)
           _endAction();
+
+        if(!isDistribute)
+        {
+          button.gameObject.SetActive(false);
+        }
 
         isMove = false;
       });

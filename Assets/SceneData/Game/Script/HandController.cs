@@ -69,4 +69,9 @@ public class HandController : MonoBehaviour
     return list.ToArray();
   }
 
+  public void SetSelect(int _idx,bool _flag)
+  {
+    trumpObj[_idx].SetSelect(_flag);
+  }
+
 }

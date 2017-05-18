@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using Common;
 using Common.DataBase;
+using UnityEngine.UI;
+using UniRx;
+using UniRx.Triggers;
 
 public class GameManager : MonoBehaviour
 {
@@ -10,6 +13,8 @@ public class GameManager : MonoBehaviour
   HandController handController;
   [SerializeField]
   SkillView playerSkillView;
+  [SerializeField]
+  Button changeButton;
   [SerializeField]
   BetPopup betPopup;
 
@@ -25,6 +30,7 @@ public class GameManager : MonoBehaviour
     Distribute,//配布
     EnemySkill,//ディーラースキル発動かどうか
     Change,
+    SecondDistribute,
     Result,
     Continue//継続チェック
   }
@@ -37,6 +43,14 @@ public class GameManager : MonoBehaviour
     distributeManager = new TrumpDistributeManager();
     handChecker = new HandChecker();
     popupManager = PopupManager.Instance;
+
+    changeButton.OnClickAsObservable()
+      .Subscribe(_ =>
+      {
+        gamePhase = GamePhase.SecondDistribute;
+        ChangePhase(gamePhase);
+        changeButton.gameObject.SetActive(false);
+      }).AddTo(gameObject);
 
     ChangePhase(gamePhase);
     SceneChanger.Instance.IsInitialize = true;
@@ -60,6 +74,10 @@ public class GameManager : MonoBehaviour
 
       case GamePhase.Change:
         ChangePhase();
+        break;
+
+      case GamePhase.SecondDistribute:
+        SecondDistributePhase();
         break;
 
       case GamePhase.Result:
@@ -130,12 +148,42 @@ public class GameManager : MonoBehaviour
 
   void ChangePhase()
   {
+    changeButton.gameObject.SetActive(true);
+  }
+
+  void SecondDistributePhase()
+  {
+    StartCoroutine(SecondDistribute());
+  }
+
+  IEnumerator SecondDistribute()
+  {
+    int[] idxArray = handController.GetSelectTrumpIdxArray();
+
+    for(int i = 0; i < idxArray.Length; i++)
+    {
+      int idx = idxArray[i];
+      handController.SetHandData(idx, distributeManager.DrawTrump());
+      handController.Move(true, idx, 1.0f, null);
+      handController.SetSelect(idx, false);
+    }
+
+    while (handController.IsMove())
+    {
+      yield return null;
+    }
+
+    gamePhase = GamePhase.Result;
+    ChangePhase(gamePhase);
 
   }
 
   void ResultPhase()
   {
-
+    var type = handChecker.CheckHand(handController.GetHandData());
+    Debug.Log(type);
+    gamePhase = GamePhase.Bet;
+    ChangePhase(gamePhase);
   }
   
   void ContinuePhase()
