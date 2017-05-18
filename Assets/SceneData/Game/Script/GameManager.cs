@@ -128,9 +128,17 @@ public class GameManager : MonoBehaviour
   {
     for (int i = 0; i < 5; i++)
     {
-      handController.SetHandData(i, distributeManager.DrawTrump());
+      var data = distributeManager.DrawTrump();
+      handController.SetHandData(i,data );
+
+      //Debug
+      Debug.Log(i.ToString() + ":" + data.mark + "," + data.number);
+
       handController.Move(true, i, cardMoveTime, null);
+      yield return new WaitForSeconds(cardMoveTime);
     }
+
+    
 
     while(handController.IsMove())
     {
@@ -168,6 +176,7 @@ public class GameManager : MonoBehaviour
       handController.SetHandData(idx, distributeManager.DrawTrump());
       handController.Move(true, idx, cardMoveTime, null);
       handController.SetSelect(idx, false);
+      yield return new WaitForSeconds(cardMoveTime);
     }
 
     while (handController.IsMove())
