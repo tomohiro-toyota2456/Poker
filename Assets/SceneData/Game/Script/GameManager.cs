@@ -10,6 +10,8 @@ using UniRx.Triggers;
 public class GameManager : MonoBehaviour
 {
   [SerializeField]
+  float cardMoveTime = 0.5f;
+  [SerializeField]
   HandController handController;
   [SerializeField]
   SkillView playerSkillView;
@@ -127,7 +129,7 @@ public class GameManager : MonoBehaviour
     for (int i = 0; i < 5; i++)
     {
       handController.SetHandData(i, distributeManager.DrawTrump());
-      handController.Move(true, i, 1.0f, null);
+      handController.Move(true, i, cardMoveTime, null);
     }
 
     while(handController.IsMove())
@@ -164,7 +166,7 @@ public class GameManager : MonoBehaviour
     {
       int idx = idxArray[i];
       handController.SetHandData(idx, distributeManager.DrawTrump());
-      handController.Move(true, idx, 1.0f, null);
+      handController.Move(true, idx, cardMoveTime, null);
       handController.SetSelect(idx, false);
     }
 
