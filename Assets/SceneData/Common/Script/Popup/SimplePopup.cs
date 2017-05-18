@@ -6,6 +6,7 @@
   using UnityEngine.UI;
   using UniRx;
   using TMPro;
+  using System;
 
   //タイトル + 説明文 + closeボタンのシンプルな構成
   public class SimplePopup : PopupBase
@@ -18,6 +19,16 @@
     TextMeshProUGUI dist;
     [SerializeField]
     Button closeButton;
+    [SerializeField]
+    Button yesButton;
+    [SerializeField]
+    Button noButton;
+
+    public enum PopupType
+    {
+      Close,
+      YesNo,
+    }
 
     // Use this for initialization
     public override void Start()
@@ -32,6 +43,46 @@
           Close();
         }).AddTo(gameObject);
     }
+
+    //初期設定　
+    public void Init(PopupType _type,string _title,string _dist,Action _yesAction = null,Action _noAction = null)
+    {
+      InitButton(_type, _yesAction, _noAction);
+
+      SetTitle(_title);
+      SetDist(_dist);
+    }
+
+    public void Init(PopupType _type, Sprite _title, string _dist, Action _yesAction = null, Action _noAction = null)
+    {
+      InitButton(_type, _yesAction, _noAction);
+
+      SetTitle(_title);
+      SetDist(_dist);
+    }
+
+    public void InitButton(PopupType _type, Action _yesAction = null, Action _noAction = null)
+    {
+      switch (_type)
+      {
+        case PopupType.Close:
+
+          closeButton.gameObject.SetActive(true);
+          yesButton.gameObject.SetActive(false);
+          noButton.gameObject.SetActive(false);
+
+          break;
+
+        case PopupType.YesNo:
+          closeButton.gameObject.SetActive(false);
+          yesButton.gameObject.SetActive(true);
+          noButton.gameObject.SetActive(true);
+          SetActionYesButton(_yesAction);
+          SetActionNoButton(_noAction);
+          break;
+      }
+    }
+
 
     //説明文をいれる
     public void SetDist(string _dist)
@@ -55,6 +106,40 @@
       titleText.gameObject.SetActive(false);
       titleImage.gameObject.SetActive(true);
       titleImage.sprite = _sprite;
+    }
+
+    //はい選択時の処理
+    public void SetActionYesButton(Action _action)
+    {
+      yesButton.OnClickAsObservable()
+        .Take(1)
+        .Subscribe(_ =>
+        {
+          if(_action != null)
+          {
+            AddCloseEndAction(_action);
+          }
+
+          Close();
+
+        }).AddTo(gameObject);
+    }
+
+    //いいえ選択時の処理
+    public void SetActionNoButton(Action _action)
+    {
+      noButton.OnClickAsObservable()
+        .Take(1)
+        .Subscribe(_ =>
+        {
+          if (_action != null)
+          {
+            AddCloseEndAction(_action);
+          }
+
+          Close();
+
+        }).AddTo(gameObject);
     }
   }
 }

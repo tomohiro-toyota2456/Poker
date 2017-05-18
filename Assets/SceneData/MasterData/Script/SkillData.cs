@@ -5,6 +5,8 @@ using UnityEngine;
 public class SkillData : ScriptableObject
 {
   [SerializeField]
+  string skillId;
+  [SerializeField]
   string skillName;
   [SerializeField]
   string dist;
@@ -17,6 +19,7 @@ public class SkillData : ScriptableObject
   [SerializeField]
   HandChecker.MarkType markType;
 
+  public string SkillId { get { return skillId; } set { skillId = value; } }
   public string SkillName { get { return skillName; } set { skillName = value; } }
   public string Dist { get { return dist; }set { dist = value; } }
   public SkillType Type { get { return skillType; } set { skillType = value; } }

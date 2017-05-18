@@ -45,7 +45,7 @@ public class TrumpObj : MonoBehaviour
           pos.y += selectOffsetY;
         }
 
-        rectTransform.position = pos;
+        rectTransform.anchoredPosition = pos;
 
       }).AddTo(gameObject);
 
@@ -109,7 +109,7 @@ public class TrumpObj : MonoBehaviour
       pos.y += selectOffsetY;
     }
 
-    rectTransform.position = pos;
+    rectTransform.anchoredPosition = pos;
   }
 
 

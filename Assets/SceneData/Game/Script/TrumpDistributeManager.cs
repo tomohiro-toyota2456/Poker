@@ -38,7 +38,7 @@ public class TrumpDistributeManager
     }
   }
 
-  HandChecker.TrumpData DrawTrump()
+  public HandChecker.TrumpData DrawTrump()
   {
     int idx = Random.Range(0, trumpList.Count-1);
 
@@ -47,7 +47,7 @@ public class TrumpDistributeManager
     return data;
   }
 
-  HandChecker.TrumpData[] DrawTrump(SkillData _skillData, HandChecker.TrumpData[] _handDataArray,int[] _changeIdxArray)
+  public HandChecker.TrumpData[] DrawTrump(SkillData _skillData, HandChecker.TrumpData[] _handDataArray,int[] _changeIdxArray)
   {
     if(_skillData.Type != SkillData.SkillType.Draw)
     {

@@ -1,22 +1,22 @@
 fileFormatVersion: 2
-guid: 4e912b4613da9124ab49001fe6172748
-timeCreated: 1495085658
+guid: 34735144a6f73ef4c9d1f31715be0f86
+timeCreated: 1495086088
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: dia_0
-    21300002: dia_1
-    21300004: dia_2
-    21300006: dia_3
-    21300008: dia_4
-    21300010: dia_5
-    21300012: dia_6
-    21300014: dia_7
-    21300016: dia_8
-    21300018: dia_9
-    21300020: dia_10
-    21300022: dia_11
-    21300024: dia_12
+    21300000: heart_0
+    21300002: heart_1
+    21300004: heart_2
+    21300006: heart_3
+    21300008: heart_4
+    21300010: heart_5
+    21300012: heart_6
+    21300014: heart_7
+    21300016: heart_8
+    21300018: heart_9
+    21300020: heart_10
+    21300022: heart_11
+    21300024: heart_12
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -99,12 +99,12 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: dia_0
+      name: heart_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 197
+        width: 202
         height: 300
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -112,62 +112,10 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: dia_1
+      name: heart_1
       rect:
         serializedVersion: 2
-        x: 208
-        y: 1
-        width: 200
-        height: 299
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: dia_2
-      rect:
-        serializedVersion: 2
-        x: 418
-        y: 1
-        width: 199
-        height: 299
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: dia_3
-      rect:
-        serializedVersion: 2
-        x: 626
-        y: 1
-        width: 196
-        height: 299
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: dia_4
-      rect:
-        serializedVersion: 2
-        x: 832
-        y: 0
-        width: 200
-        height: 300
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: dia_5
-      rect:
-        serializedVersion: 2
-        x: 1040
+        x: 209
         y: 0
         width: 199
         height: 300
@@ -177,33 +125,85 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: dia_6
+      name: heart_2
       rect:
         serializedVersion: 2
-        x: 1250
-        y: 1
+        x: 417
+        y: 0
+        width: 199
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: heart_3
+      rect:
+        serializedVersion: 2
+        x: 627
+        y: 0
         width: 198
-        height: 299
+        height: 300
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: dia_7
+      name: heart_4
       rect:
         serializedVersion: 2
-        x: 1458
-        y: 1
+        x: 835
+        y: 0
         width: 197
-        height: 299
+        height: 300
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: dia_8
+      name: heart_5
+      rect:
+        serializedVersion: 2
+        x: 1044
+        y: 0
+        width: 197
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: heart_6
+      rect:
+        serializedVersion: 2
+        x: 1248
+        y: 0
+        width: 200
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: heart_7
+      rect:
+        serializedVersion: 2
+        x: 1459
+        y: 0
+        width: 198
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: heart_8
       rect:
         serializedVersion: 2
         x: 1664
@@ -216,36 +216,23 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: dia_9
+      name: heart_9
       rect:
         serializedVersion: 2
-        x: 1873
-        y: 1
+        x: 1872
+        y: 0
         width: 200
-        height: 299
+        height: 300
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: dia_10
+      name: heart_10
       rect:
         serializedVersion: 2
-        x: 2081
-        y: 1
-        width: 200
-        height: 299
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: dia_11
-      rect:
-        serializedVersion: 2
-        x: 2287
+        x: 2080
         y: 0
         width: 202
         height: 300
@@ -255,12 +242,25 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: dia_12
+      name: heart_11
       rect:
         serializedVersion: 2
-        x: 2496
+        x: 2288
         y: 0
-        width: 201
+        width: 199
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: heart_12
+      rect:
+        serializedVersion: 2
+        x: 2495
+        y: 0
+        width: 200
         height: 300
       alignment: 0
       pivot: {x: 0.5, y: 0.5}

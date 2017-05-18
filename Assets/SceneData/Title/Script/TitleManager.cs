@@ -7,29 +7,42 @@
   using UniRx;
   using UniRx.Triggers;
   using Common;
-
+  using Common.DataBase;
   public class TitleManager : MonoBehaviour
   {
     [SerializeField]
     Button startButton;
 
+    UserDB userDB;
     // Use this for initialization
     void Start()
     {
+      userDB = DataBaseManager.Instance.GetDataBase<UserDB>();
+
       startButton.OnClickAsObservable()
         .Take(1)
         .Subscribe(_ =>
         {
-          SceneChanger.Instance.ChangeScene("Game");
+          ChangeScene();
         }).AddTo(gameObject);
 
       SceneChanger.Instance.IsInitialize = true;
     }
 
-    // Update is called once per frame
-    void Update()
+    void ChangeScene()
     {
-
+      if (userDB.IsExistData())
+      {
+        userDB.LoadUserData();
+        SceneChanger.Instance.ChangeScene("Home");
+      }
+      else
+      {
+        userDB.LoadUserData();
+        //ほんとは導入シーンへ
+        SceneChanger.Instance.ChangeScene("Home");
+      }
     }
+
   }
 }
