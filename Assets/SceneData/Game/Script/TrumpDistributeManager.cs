@@ -48,7 +48,7 @@ public class TrumpDistributeManager
 
   public HandChecker.TrumpData DrawTrump()
   {
-    int idx = Random.Range(0, trumpList.Count-1);
+    int idx = Random.Range(0, trumpList.Count);
 
     HandChecker.TrumpData data = trumpList[idx];
     trumpList.RemoveAt(idx);
@@ -92,7 +92,7 @@ public class TrumpDistributeManager
 
     if (array != null && array.Length != 0)
     {
-      int selectCardIdx = Random.Range(0, array.Length - 1);
+      int selectCardIdx = Random.Range(0, array.Length);
       HandChecker.TrumpData trumpData = array[selectCardIdx];
       trumpList.Remove(trumpData);
       return trumpData;
@@ -107,7 +107,7 @@ public class TrumpDistributeManager
 
     if (array != null && array.Length != 0)
     {
-      int selectCardIdx = Random.Range(0, array.Length - 1);
+      int selectCardIdx = Random.Range(0, array.Length);
       HandChecker.TrumpData trumpData = array[selectCardIdx];
       trumpList.Remove(trumpData);
       return trumpData;
@@ -128,7 +128,7 @@ public class TrumpDistributeManager
 
     while (markList.Count != 0)
     {
-      int markIdx = Random.Range(0, markList.Count - 1);
+      int markIdx = Random.Range(0, markList.Count);
       HandChecker.MarkType mark = markList[markIdx];
       var list = trumpList.Where(data => data.mark == mark).ToList();
 
@@ -136,7 +136,7 @@ public class TrumpDistributeManager
       {
         for(int i = 0; i < HandData.handMax; i++)
         {
-          int idx = Random.Range(0,list.Count - 1);
+          int idx = Random.Range(0,list.Count);
           handArray[i] = list[idx];
           trumpList.Remove(list[idx]);
           list.RemoveAt(idx);
@@ -163,7 +163,7 @@ public class TrumpDistributeManager
 
     while(numberList.Count != 0)
     {
-      int numberIdx = Random.Range(0, numberList.Count - 1);
+      int numberIdx = Random.Range(0, numberList.Count);
       int number = numberList[numberIdx];
       var list = trumpList.Where(data => data.number == number).ToList();
 
@@ -171,7 +171,7 @@ public class TrumpDistributeManager
       {
         for(int i = 0; i < 2; i++)
         {
-          int idx = Random.Range(0, list.Count - 1);
+          int idx = Random.Range(0, list.Count);
           PairArray[i] = list[idx];
           trumpList.Remove(list[idx]);
           list.RemoveAt(idx);
