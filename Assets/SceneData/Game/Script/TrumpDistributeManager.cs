@@ -24,6 +24,7 @@ public class TrumpDistributeManager
     }
 
     trumpList = new List<HandChecker.TrumpData>();
+    var trumpList2 = new List<HandChecker.TrumpData>();
 
     for(int i = 0; i <= HandChecker.MarkType.Clover.GetHashCode();i++)
     {
@@ -36,6 +37,13 @@ public class TrumpDistributeManager
         trumpList.Add(data);
       }
     }
+
+    while(trumpList.Count != 0)
+    {
+      trumpList2.Add(DrawTrump());
+    }
+
+    trumpList = trumpList2;
   }
 
   public HandChecker.TrumpData DrawTrump()

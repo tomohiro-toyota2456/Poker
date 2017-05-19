@@ -118,6 +118,11 @@ public class TrumpObj : MonoBehaviour
     rectTransform.anchoredPosition = pos;
   }
 
+  public void SetPosition(Vector2 _pos)
+  {
+    rectTransform.anchoredPosition = _pos;
+  }
+
 
 	
 

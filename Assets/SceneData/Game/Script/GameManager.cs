@@ -6,6 +6,7 @@ using Common.DataBase;
 using UnityEngine.UI;
 using UniRx;
 using UniRx.Triggers;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
@@ -16,14 +17,26 @@ public class GameManager : MonoBehaviour
   [SerializeField]
   SkillView playerSkillView;
   [SerializeField]
-  Button changeButton;
+  HandImageView handImageView;
   [SerializeField]
-  BetPopup betPopup;
+  Button button;
+  [SerializeField]
+  TextMeshProUGUI buttonText;
+  [SerializeField]
+  GamePopupManager gamePopupManager;
+  [SerializeField]
+  TextMeshProUGUI haveCoinText;
+  [SerializeField]
+  TextMeshProUGUI betCoinText;
 
   HandChecker handChecker;　
   TrumpDistributeManager distributeManager;//配る用スクリプト
   PopupManager popupManager;
+  GameUserData gameUserData;
+  MasterSkillDB masterSkillDB;
 
+  float bonusRate = 0;
+  int ContinueCounter = 0;
   long bet = 0;
 
   public enum GamePhase
@@ -42,21 +55,36 @@ public class GameManager : MonoBehaviour
 	// Use this for initialization
 	void Start ()
   {
+    //ゲームで使うデータのロード
+    gameUserData.LoadUserDB(DataBaseManager.Instance.GetDataBase<UserDB>());
+
+    SetViewBetCoin(gameUserData.BetCoin);
+    SetViewHaveCoin(gameUserData.HaveCoin);
+
+    //トランプ配布機能の作成
     distributeManager = new TrumpDistributeManager();
+    //手札の役チェックの作成
     handChecker = new HandChecker();
+
     popupManager = PopupManager.Instance;
 
-    changeButton.OnClickAsObservable()
-      .Subscribe(_ =>
-      {
-        gamePhase = GamePhase.SecondDistribute;
-        ChangePhase(gamePhase);
-        changeButton.gameObject.SetActive(false);
-      }).AddTo(gameObject);
+    button.gameObject.SetActive(false);
 
+    //最初のフェーズへ
     ChangePhase(gamePhase);
     SceneChanger.Instance.IsInitialize = true;
 	}
+
+
+  void SetViewHaveCoin(long _haveCoin)
+  {
+    haveCoinText.text = _haveCoin.ToString();
+  }
+
+  void SetViewBetCoin(long _betCoin)
+  {
+    betCoinText.text = _betCoin.ToString();
+  }
 
   void ChangePhase(GamePhase _phase)
   {
@@ -100,13 +128,13 @@ public class GameManager : MonoBehaviour
   IEnumerator Bet()
   {
     bool isBet = true;
-    var popup = popupManager.Create<BetPopup>(betPopup);
-    popup.Init(100000000, 100, (val) =>
+
+    gamePopupManager.OpenBetPopup(gameUserData.HaveCoin, 100, (val) =>
     {
-      isBet = false;
       bet = val;
+      isBet = false;
     });
-    popupManager.OpenPopup(popup, null);
+
 
     while(isBet)
     {
@@ -121,6 +149,15 @@ public class GameManager : MonoBehaviour
 
   void DistributePhase()
   {
+    //この時点でベット確定し、セーブ
+    //ベットコイン決定
+    gameUserData.BetCoin = bet;
+    //セーブ
+    gameUserData.UseCoinAndSave();
+    //表示更新
+    SetViewBetCoin(bet);
+    SetViewHaveCoin(gameUserData.HaveCoin);
+
     StartCoroutine(Distribute());
   }
 
@@ -158,7 +195,19 @@ public class GameManager : MonoBehaviour
 
   void ChangePhase()
   {
-    changeButton.gameObject.SetActive(true);
+    button.gameObject.SetActive(true);
+
+    //チェンジボタン機能
+    buttonText.text = "変更確定";
+    button.OnClickAsObservable()
+      .Take(1)
+      .Subscribe(_ =>
+      {
+        gamePhase = GamePhase.SecondDistribute;
+        ChangePhase(gamePhase);
+        button.gameObject.SetActive(false);
+      }).AddTo(gameObject);
+
   }
 
   void SecondDistributePhase()
@@ -191,15 +240,106 @@ public class GameManager : MonoBehaviour
 
   void ResultPhase()
   {
+    StartCoroutine(Result());
+  }
+
+  IEnumerator Result()
+  {
     var type = handChecker.CheckHand(handController.GetHandData());
+    handImageView.SetActive(true);
+    handImageView.SetSprite(type.GetHashCode());
+    handImageView.InAnimationScl(0.5f, null);
+    
+    //役が成立していればボーナス値も適用する
+    float bonusVal = type != HandChecker.HandType.NoPair ? bonusRate : 0;
+    gameUserData.BetCoin = (long)(gameUserData.BetCoin * (GameCommon.GetHandScale(type) + bonusVal));
+
     Debug.Log(type);
-    gamePhase = GamePhase.Bet;
-    ChangePhase(gamePhase);
+    yield return new WaitForSeconds(2.5f);
+
+    //確認ボタン機能
+    button.gameObject.SetActive(true);
+    buttonText.text = "次へ";
+    button.OnClickAsObservable()
+      .Take(1)
+      .Subscribe(_ =>
+      {
+        handImageView.OutAnimationScl(0.3f, ()=>
+         {
+           gamePhase = GamePhase.Continue;
+           ChangePhase(gamePhase);
+           button.gameObject.SetActive(false);
+         });
+      }).AddTo(gameObject);
+
+
+
   }
   
   void ContinuePhase()
   {
+    //所持金Max処理
+    long haveCoin = gameUserData.HaveCoin;
+    long haveMoney = -1000;
 
+    if (haveCoin >= GameCommon.maxCoin)
+    {
+      haveCoin = GameCommon.maxCoin;
+
+      //未クリアなので借金を返すように促す
+      if (haveMoney < 0)
+      {
+        gamePopupManager.OpenHaveCoinMaxPopup(false, () => FinishGame());
+      }
+      else
+      {
+        gamePopupManager.OpenHaveCoinMaxPopup(true, () =>Continue());
+      }
+    }
+    else if (haveCoin < 100 && gameUserData.BetCoin == 0)//コイン不足 かつ負けている
+    {
+      gamePopupManager.OpenNoMoneyContinuePopup(null, () => FinishGame());
+    }
+    else
+    {
+      Continue();
+    }
+  }
+
+  void Continue()
+  {
+    var type = handChecker.CheckHand(handController.GetHandData());
+
+    if(type != HandChecker.HandType.NoPair)
+    {
+      gamePopupManager.OpenContinuePopup(gameUserData.BetCoin,bonusRate, () =>
+      {
+        gamePhase = GamePhase.Distribute;
+        ChangePhase(gamePhase);
+      },
+      () =>
+      {
+        FinishGame();
+      });
+    }
+    else
+    {
+      gamePopupManager.OpenConfirmPopup(()=>
+      {
+        gamePhase = GamePhase.Bet;
+        ChangePhase(gamePhase);
+      },
+      ()=>
+      {
+        FinishGame();
+      });
+    }
+  }
+
+  void FinishGame()
+  {
+    gameUserData.GetCoinAndSave();
+    SceneChanger.Instance.ChangeScene("Home");
   }
 
 }

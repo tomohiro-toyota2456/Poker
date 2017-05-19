@@ -12,6 +12,8 @@
   {
     [SerializeField]
     Button startButton;
+    [SerializeField]
+    Button deleteUserDataButton;
 
     UserDB userDB;
     // Use this for initialization
@@ -24,6 +26,14 @@
         .Subscribe(_ =>
         {
           ChangeScene();
+        }).AddTo(gameObject);
+
+      deleteUserDataButton.OnClickAsObservable()
+        .Take(1)
+        .Subscribe(_ =>
+        {
+          userDB.DeleteUserData();
+          Debug.Log("DeleteUserData!!!!");
         }).AddTo(gameObject);
 
       SceneChanger.Instance.IsInitialize = true;

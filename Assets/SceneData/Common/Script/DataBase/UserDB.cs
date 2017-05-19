@@ -168,4 +168,9 @@ public class UserDB : DataBase
     SaveLoginStore();
     SaveSkillSlot();
   }
+
+  public void DeleteUserData()
+  {
+    PlayerPrefs.DeleteAll();
+  }
 }

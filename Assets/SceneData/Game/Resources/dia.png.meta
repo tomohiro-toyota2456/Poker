@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 4e912b4613da9124ab49001fe6172748
-timeCreated: 1495085658
+timeCreated: 1495116778
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -104,10 +104,10 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 197
+        width: 202
         height: 300
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -115,12 +115,12 @@ TextureImporter:
       name: dia_1
       rect:
         serializedVersion: 2
-        x: 208
-        y: 1
-        width: 200
-        height: 299
+        x: 206
+        y: 0
+        width: 204
+        height: 300
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -128,12 +128,12 @@ TextureImporter:
       name: dia_2
       rect:
         serializedVersion: 2
-        x: 418
-        y: 1
-        width: 199
-        height: 299
+        x: 414
+        y: 0
+        width: 204
+        height: 300
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -141,12 +141,12 @@ TextureImporter:
       name: dia_3
       rect:
         serializedVersion: 2
-        x: 626
-        y: 1
-        width: 196
-        height: 299
+        x: 622
+        y: 0
+        width: 204
+        height: 300
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -154,12 +154,12 @@ TextureImporter:
       name: dia_4
       rect:
         serializedVersion: 2
-        x: 832
+        x: 830
         y: 0
-        width: 200
+        width: 204
         height: 300
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -167,12 +167,12 @@ TextureImporter:
       name: dia_5
       rect:
         serializedVersion: 2
-        x: 1040
+        x: 1038
         y: 0
-        width: 199
+        width: 204
         height: 300
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -180,12 +180,12 @@ TextureImporter:
       name: dia_6
       rect:
         serializedVersion: 2
-        x: 1250
-        y: 1
-        width: 198
-        height: 299
+        x: 1246
+        y: 0
+        width: 204
+        height: 300
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -193,12 +193,12 @@ TextureImporter:
       name: dia_7
       rect:
         serializedVersion: 2
-        x: 1458
-        y: 1
-        width: 197
-        height: 299
+        x: 1454
+        y: 0
+        width: 204
+        height: 300
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -206,12 +206,12 @@ TextureImporter:
       name: dia_8
       rect:
         serializedVersion: 2
-        x: 1664
+        x: 1663
         y: 0
-        width: 201
+        width: 203
         height: 300
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -219,12 +219,12 @@ TextureImporter:
       name: dia_9
       rect:
         serializedVersion: 2
-        x: 1873
-        y: 1
-        width: 200
-        height: 299
+        x: 1871
+        y: 0
+        width: 202
+        height: 300
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -232,12 +232,12 @@ TextureImporter:
       name: dia_10
       rect:
         serializedVersion: 2
-        x: 2081
-        y: 1
-        width: 200
-        height: 299
+        x: 2079
+        y: 0
+        width: 204
+        height: 300
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -250,7 +250,7 @@ TextureImporter:
         width: 202
         height: 300
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -258,12 +258,12 @@ TextureImporter:
       name: dia_12
       rect:
         serializedVersion: 2
-        x: 2496
+        x: 2495
         y: 0
-        width: 201
+        width: 204
         height: 300
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
