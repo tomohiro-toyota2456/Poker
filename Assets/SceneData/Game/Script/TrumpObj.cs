@@ -54,6 +54,9 @@ public class TrumpObj : MonoBehaviour
   //移動用
   public void Move(bool isDistribute,float _time,Action _endAction)
   {
+    if (isMove)
+      return;
+
     button.gameObject.SetActive(true);
     Vector2 sPos;
     Vector2 tPos;
@@ -71,6 +74,8 @@ public class TrumpObj : MonoBehaviour
       sPos = targetPos;
       tPos = stPos;
     }
+
+    rectTransform.anchoredPosition = Vector2.Lerp(sPos, tPos, 0);
 
     float timer = 0;
 
@@ -120,6 +125,7 @@ public class TrumpObj : MonoBehaviour
 
   public void SetPosition(Vector2 _pos)
   {
+    rectTransform.gameObject.SetActive(false);
     rectTransform.anchoredPosition = _pos;
   }
 

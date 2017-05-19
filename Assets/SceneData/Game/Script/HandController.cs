@@ -74,4 +74,9 @@ public class HandController : MonoBehaviour
     trumpObj[_idx].SetSelect(_flag);
   }
 
+  public void SetPosition(int _idx,Vector2 _pos)
+  {
+    trumpObj[_idx].SetPosition(_pos);
+  }
+
 }

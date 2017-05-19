@@ -141,6 +141,12 @@ public class GameManager : MonoBehaviour
       yield return null;
     }
 
+    //この時点でベット確定し、セーブ
+    //ベットコイン決定
+    gameUserData.BetCoin = bet;
+    //セーブ
+    gameUserData.UseCoinAndSave();
+
     gamePhase = GamePhase.Distribute;
     distributeManager.InitTrumpList();
     ChangePhase(gamePhase);
@@ -149,13 +155,8 @@ public class GameManager : MonoBehaviour
 
   void DistributePhase()
   {
-    //この時点でベット確定し、セーブ
-    //ベットコイン決定
-    gameUserData.BetCoin = bet;
-    //セーブ
-    gameUserData.UseCoinAndSave();
     //表示更新
-    SetViewBetCoin(bet);
+    SetViewBetCoin(gameUserData.BetCoin);
     SetViewHaveCoin(gameUserData.HaveCoin);
 
     StartCoroutine(Distribute());
@@ -164,6 +165,11 @@ public class GameManager : MonoBehaviour
   IEnumerator Distribute()
   {
     for (int i = 0; i < 5; i++)
+    {
+      handController.SetPosition(i, new Vector2(0, 10000));
+    }
+
+      for (int i = 0; i < 5; i++)
     {
       var data = distributeManager.DrawTrump();
       handController.SetHandData(i,data );
@@ -219,12 +225,19 @@ public class GameManager : MonoBehaviour
   {
     int[] idxArray = handController.GetSelectTrumpIdxArray();
 
-    for(int i = 0; i < idxArray.Length; i++)
+    for (int i = 0; i < idxArray.Length; i++)
+    {
+      int idx = idxArray[i];
+      handController.SetSelect(idx, false);
+      handController.SetPosition(idx, new Vector2(0, 10000));
+    }
+
+    for (int i = 0; i < idxArray.Length; i++)
     {
       int idx = idxArray[i];
       handController.SetHandData(idx, distributeManager.DrawTrump());
       handController.Move(true, idx, cardMoveTime, null);
-      handController.SetSelect(idx, false);
+      Debug.Log(i);
       yield return new WaitForSeconds(cardMoveTime);
     }
 
