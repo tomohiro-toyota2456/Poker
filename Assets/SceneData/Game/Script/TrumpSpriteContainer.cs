@@ -32,33 +32,5 @@ public class TrumpSpriteContainer : MonoBehaviour
     return null;
   }
 
-#if UNITY_EDITOR
-
-  public void SetHeartSpriteArray(Sprite[] _spriteArray)
-  {
-    heartSpriteArray = new Sprite[_spriteArray.Length];
-    _spriteArray.CopyTo(heartSpriteArray,0);
-  }
-
-  public void SetSpadeSpriteArray(Sprite[] _spriteArray)
-  {
-    spadeSpriteArray = new Sprite[_spriteArray.Length];
-    _spriteArray.CopyTo(spadeSpriteArray, 0);
-  }
-
-  public void SetDiaSpriteArray(Sprite[] _spriteArray)
-  {
-    diaSpriteArray = new Sprite[_spriteArray.Length];
-    _spriteArray.CopyTo(diaSpriteArray, 0);
-  }
-
-  public void SetCloverSpriteArray(Sprite[] _spriteArray)
-  {
-    cloverSpriteArray = new Sprite[_spriteArray.Length];
-    _spriteArray.CopyTo(cloverSpriteArray, 0);
-  }
-
-
-#endif
 
 }

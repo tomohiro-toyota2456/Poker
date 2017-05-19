@@ -21,6 +21,8 @@ public class TrumpSpriteContainerInspector : Editor
   {
     base.OnInspectorGUI();
 
+    serializedObject.Update();
+
     heartTex = (Texture2D)EditorGUILayout.ObjectField("HeartTex", heartTex, typeof(Texture2D));
     spadeTex = (Texture2D)EditorGUILayout.ObjectField("SpadeTex", spadeTex, typeof(Texture2D));
     diaTex = (Texture2D)EditorGUILayout.ObjectField("DiaTex", diaTex, typeof(Texture2D));
@@ -30,6 +32,9 @@ public class TrumpSpriteContainerInspector : Editor
     {
       SetSprite();
     }
+
+    serializedObject.ApplyModifiedProperties();
+    
 
   }
 
@@ -49,10 +54,15 @@ public class TrumpSpriteContainerInspector : Editor
 
       Sprite[] sprite = Resources.LoadAll<Sprite>(heartPath);
 
+      var array = serializedObject.FindProperty("heartSpriteArray");
+      array.ClearArray();
 
-      var container = (TrumpSpriteContainer)target;
+      for (int i = 0; i < sprite.Length; i++)
+      {
+        array.InsertArrayElementAtIndex(i);
+        array.GetArrayElementAtIndex(i).objectReferenceValue = sprite[i];
+      }
 
-      container.SetHeartSpriteArray(sprite);
     }
 
     if (spadeTex != null)
@@ -69,10 +79,14 @@ public class TrumpSpriteContainerInspector : Editor
 
       Sprite[] sprite = Resources.LoadAll<Sprite>(spadePath);
 
+      var array = serializedObject.FindProperty("spadeSpriteArray");
+      array.ClearArray();
 
-      var container = (TrumpSpriteContainer)target;
-
-      container.SetSpadeSpriteArray(sprite);
+      for (int i = 0; i < sprite.Length; i++)
+      {
+        array.InsertArrayElementAtIndex(i);
+        array.GetArrayElementAtIndex(i).objectReferenceValue = sprite[i];
+      }
     }
 
     if (diaTex != null)
@@ -89,9 +103,14 @@ public class TrumpSpriteContainerInspector : Editor
 
       Sprite[] sprite = Resources.LoadAll<Sprite>(diaPath);
 
-      var container = (TrumpSpriteContainer)target;
+      var array = serializedObject.FindProperty("diaSpriteArray");
+      array.ClearArray();
 
-      container.SetDiaSpriteArray(sprite);
+      for (int i = 0; i < sprite.Length; i++)
+      {
+        array.InsertArrayElementAtIndex(i);
+        array.GetArrayElementAtIndex(i).objectReferenceValue = sprite[i];
+      }
     }
 
     if (cloverTex != null)
@@ -108,9 +127,14 @@ public class TrumpSpriteContainerInspector : Editor
 
       Sprite[] sprite = Resources.LoadAll<Sprite>(cloverPath);
 
-      var container = (TrumpSpriteContainer)target;
+      var array = serializedObject.FindProperty("cloverSpriteArray");
+      array.ClearArray();
 
-      container.SetCloverSpriteArray(sprite);
+      for (int i = 0; i < sprite.Length; i++)
+      {
+        array.InsertArrayElementAtIndex(i);
+        array.GetArrayElementAtIndex(i).objectReferenceValue = sprite[i];
+      }
     }
 
   }

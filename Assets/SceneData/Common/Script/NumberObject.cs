@@ -73,16 +73,5 @@
       }
 
     }
-
-#if UNITY_EDITOR
-
-    public void SetSpriteArray(Sprite[] _spriteArray)
-    {
-      numberSprites = new Sprite[_spriteArray.Length];
-      _spriteArray.CopyTo(numberSprites,0); 
-    }
-
-#endif
-
   }
 }

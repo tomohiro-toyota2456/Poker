@@ -14,12 +14,16 @@
     {
       base.OnInspectorGUI();
 
+      serializedObject.Update();
+
       numberTex = (Texture2D)EditorGUILayout.ObjectField("NumberTex", numberTex, typeof(Texture2D));
 
       if(GUILayout.Button("SetSprite"))
       {
         SetSprite();
       }
+
+      serializedObject.ApplyModifiedProperties();
     }
 
     void SetSprite()
@@ -39,8 +43,15 @@
 
       Sprite[] sprite = Resources.LoadAll<Sprite>(numberPath);
 
-      var numberObject = (NumberObject)target;
-      numberObject.SetSpriteArray(sprite);
+      var array = serializedObject.FindProperty("numberSprites");
+      array.ClearArray();
+
+      for (int i = 0; i < sprite.Length; i++)
+      {
+        array.InsertArrayElementAtIndex(i);
+        array.GetArrayElementAtIndex(i).objectReferenceValue = sprite[i];
+      }
+
     }
 
   }
