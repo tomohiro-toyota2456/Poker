@@ -62,6 +62,11 @@ public class TrumpDistributeManager
       return null;
     }
 
+    if (_changeIdxArray.Length == 0)
+    {
+      return _handDataArray;
+    }
+
     switch(_skillData.Detail)
     {
       case SkillData.SkillDetail.FixedNumber:

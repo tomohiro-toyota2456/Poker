@@ -20,7 +20,9 @@ public class TrumpObj : MonoBehaviour
   float selectOffsetY;//選択時にどれだけ上に上がるか
 
   bool isMove;
+  bool isLock;
   public bool IsMove { get { return isMove; } }
+  public bool IsLock { set { isLock = value; } }
 
   bool isSelect = false;
   public bool IsSelect { get { return isSelect; } }
@@ -34,6 +36,7 @@ public class TrumpObj : MonoBehaviour
     //クリックで選択・非選択状態
     //選択時は少し上にオブジェクトがずれる処理
     button.OnClickAsObservable()
+      .Where(_=>!isLock)
       .Where(_ => !isMove)
       .Subscribe(_ =>
       {
@@ -128,6 +131,7 @@ public class TrumpObj : MonoBehaviour
     rectTransform.gameObject.SetActive(false);
     rectTransform.anchoredPosition = _pos;
   }
+
 
 
 	

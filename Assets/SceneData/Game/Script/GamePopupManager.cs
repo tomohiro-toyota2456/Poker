@@ -76,5 +76,12 @@ public class GamePopupManager : MonoBehaviour
     pp.Init(SimplePopup.PopupType.YesNo, "コイン不足", dist, _yesAction, _noAction);
     popupManager.OpenPopup(pp, null);
   }
+
+  public void OpenSkillDetailPopup(string _skillName,string _dist,Action _yesAction,Action _noAction)
+  {
+    var pp = popupManager.Create<SimplePopup>(simplePopup);
+    pp.Init(SimplePopup.PopupType.YesNo, _skillName, _dist, _yesAction, _noAction);
+    popupManager.OpenPopup(pp, null);
+  }
 	
 }

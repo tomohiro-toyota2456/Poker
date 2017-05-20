@@ -7,6 +7,7 @@ using UnityEngine.UI;
 using UniRx;
 using UniRx.Triggers;
 using TMPro;
+using System;
 
 public class GameManager : MonoBehaviour
 {
@@ -31,13 +32,15 @@ public class GameManager : MonoBehaviour
 
   HandChecker handChecker;　
   TrumpDistributeManager distributeManager;//配る用スクリプト
-  PopupManager popupManager;
   GameUserData gameUserData;
   MasterSkillDB masterSkillDB;
 
   float bonusRate = 0;
   int ContinueCounter = 0;
   long bet = 0;
+
+  int enableChangeNum = 5;//変更できる数
+  bool isForceChange = false;
 
   public enum GamePhase
   {
@@ -51,6 +54,7 @@ public class GameManager : MonoBehaviour
   }
 
   GamePhase gamePhase = GamePhase.Bet;
+  SkillData skillData;
 
 	// Use this for initialization
 	void Start ()
@@ -67,12 +71,10 @@ public class GameManager : MonoBehaviour
     //手札の役チェックの作成
     handChecker = new HandChecker();
 
-    popupManager = PopupManager.Instance;
-
     button.gameObject.SetActive(false);
 
     SetSkill();
-
+    playerSkillView.SetActiveSkillView(false);
     //最初のフェーズへ
     ChangePhase(gamePhase);
     SceneChanger.Instance.IsInitialize = true;
@@ -85,10 +87,21 @@ public class GameManager : MonoBehaviour
     if (skill1 == null)
     {
       playerSkillView.SetButtonText(0, "Empty");
+      playerSkillView.SetButtonInteractable(0, false);
     }
     else
     {
       playerSkillView.SetButtonText(0, skill1.SkillName);
+
+      Action action = () =>
+      {
+        gamePopupManager.OpenSkillDetailPopup(skill1.SkillName, skill1.Dist, () =>
+          {
+            UseSkill(skill1,1);
+          }, null);
+      };
+
+      playerSkillView.SetButtonAction(0, action);
     }
 
     var skill2 = masterSkillDB.GetData(gameUserData.UserSkillSlot.skillSlot2);
@@ -96,10 +109,22 @@ public class GameManager : MonoBehaviour
     if (skill2 == null)
     {
       playerSkillView.SetButtonText(1, "Empty");
+      playerSkillView.SetButtonInteractable(1, false);
     }
     else
     {
       playerSkillView.SetButtonText(1, skill2.SkillName);
+
+      Action action = () =>
+      {
+        gamePopupManager.OpenSkillDetailPopup(skill2.SkillName, skill2.Dist, () =>
+        {
+          UseSkill(skill2,2);
+        }, null);
+      };
+
+      playerSkillView.SetButtonAction(1, action);
+
     }
 
     var skill3 = masterSkillDB.GetData(gameUserData.UserSkillSlot.skillSlot3);
@@ -107,12 +132,70 @@ public class GameManager : MonoBehaviour
     if (skill3 == null)
     {
       playerSkillView.SetButtonText(2, "Empty");
+      playerSkillView.SetButtonInteractable(2, false);
     }
     else
     {
       playerSkillView.SetButtonText(2, skill3.SkillName);
+
+      Action action = () =>
+      {
+        gamePopupManager.OpenSkillDetailPopup(skill3.SkillName, skill3.Dist, () =>
+        {
+          UseSkill(skill3,3);
+        }, null);
+      };
+
+      playerSkillView.SetButtonAction(2, action);
+
     }
 
+  }
+
+  public void UseSkill(SkillData _skillData,int _useSlot)
+  {
+    skillData = _skillData;
+
+    //固定引き系の場合
+    if(skillData.Detail == SkillData.SkillDetail.FixedNumber || skillData.Detail == SkillData.SkillDetail.FiexedMark)
+    {
+      enableChangeNum = 1; 
+    }
+    else if( skillData.Detail == SkillData.SkillDetail.AllChangeOnePair || skillData.Detail == SkillData.SkillDetail.AllChangeTwoPair || skillData.Detail == SkillData.SkillDetail.AllChangeFlush)
+    {
+      enableChangeNum = 5;
+
+      handController.SetSelect(0, true);
+      handController.SetSelect(1, true);
+      handController.SetSelect(2, true);
+      handController.SetSelect(3, true);
+      handController.SetSelect(4, true);
+      handController.SetAllLock(true);
+    }
+    else if(skillData.Detail == SkillData.SkillDetail.Raise)
+    {
+
+    }
+
+    switch(_useSlot)
+    {
+      case 1:
+        gameUserData.IsUseSkill1 = true;
+        playerSkillView.SetButtonInteractable(0, false);
+        break;
+
+      case 2:
+        gameUserData.IsUseSkill2 = true;
+        playerSkillView.SetButtonInteractable(1, false);
+        break;
+
+      case 3:
+        gameUserData.IsUseSkill3 = true;
+        playerSkillView.SetButtonInteractable(2, false);
+        break;
+    }
+
+    playerSkillView.SetActiveSkillView(false);
   }
 
 
@@ -243,6 +326,23 @@ public class GameManager : MonoBehaviour
   {
     button.gameObject.SetActive(true);
 
+    //スキルビューを有効
+    playerSkillView.SetActiveSkillView(true);
+
+    //条件
+    var dispose = this.UpdateAsObservable()
+      .Subscribe(_ =>
+      {
+        if(handController.GetSelectTrumpIdxArray().Length > enableChangeNum)
+        {
+          button.interactable = false;
+        }
+        else
+        {
+          button.interactable = true;
+        }
+      });
+
     //チェンジボタン機能
     buttonText.text = "変更確定";
     button.OnClickAsObservable()
@@ -252,6 +352,7 @@ public class GameManager : MonoBehaviour
         gamePhase = GamePhase.SecondDistribute;
         ChangePhase(gamePhase);
         button.gameObject.SetActive(false);
+        dispose.Dispose();
       }).AddTo(gameObject);
 
   }
@@ -272,19 +373,40 @@ public class GameManager : MonoBehaviour
       handController.SetPosition(idx, new Vector2(0, 10000));
     }
 
-    for (int i = 0; i < idxArray.Length; i++)
+    if (skillData == null)
     {
-      int idx = idxArray[i];
-      handController.SetHandData(idx, distributeManager.DrawTrump());
-      handController.Move(true, idx, cardMoveTime, null);
-      Debug.Log(i);
-      yield return new WaitForSeconds(cardMoveTime);
+
+      for (int i = 0; i < idxArray.Length; i++)
+      {
+        int idx = idxArray[i];
+        handController.SetHandData(idx, distributeManager.DrawTrump());
+        handController.Move(true, idx, cardMoveTime, null);
+        Debug.Log(i);
+        yield return new WaitForSeconds(cardMoveTime);
+      }
+
+    }
+    else
+    {
+      var hand = distributeManager.DrawTrump(skillData, handController.GetHandData(), idxArray);
+      handController.SetHandData(hand);
+      for (int i = 0; i < idxArray.Length; i++)
+      {
+        int idx = idxArray[i];
+        handController.Move(true, idx, cardMoveTime, null);
+        Debug.Log(i);
+        yield return new WaitForSeconds(cardMoveTime);
+      }
+
     }
 
     while (handController.IsMove())
     {
       yield return null;
     }
+
+    skillData = null;
+    enableChangeNum = 5;
 
     gamePhase = GamePhase.Result;
     ChangePhase(gamePhase);

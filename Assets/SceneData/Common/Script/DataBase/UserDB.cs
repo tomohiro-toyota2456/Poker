@@ -68,8 +68,8 @@ public class UserDB : DataBase
     {
       SkillSlot slot;
 
-      slot.skillSlot1 = "";
-      slot.skillSlot2 = "";
+      slot.skillSlot1 = "s00001";
+      slot.skillSlot2 = "s00002";
       slot.skillSlot3 = "";
 
       userData.skillSlot = slot;

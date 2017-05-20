@@ -27,6 +27,15 @@ public class HandController : MonoBehaviour
     trumpObj[_idx].SetSprite(container.GetSprite(_handData.mark, _handData.number));
   }
 
+  public void SetHandData(HandChecker.TrumpData[] _handData)
+  {
+    for(int i = 0; i < _handData.Length; i++)
+    {
+      handData.SetData(i, _handData[i]);
+      trumpObj[i].SetSprite(container.GetSprite(_handData[i].mark, _handData[i].number));
+    }
+  }
+
   public HandChecker.TrumpData[] GetHandData()
   {
     return handData.GetData();
@@ -79,4 +88,11 @@ public class HandController : MonoBehaviour
     trumpObj[_idx].SetPosition(_pos);
   }
 
+  public void SetAllLock(bool _isLock)
+  {
+    for(int i = 0; i < 5; i++)
+    {
+      trumpObj[i].IsLock = _isLock;
+    }
+  }
 }
