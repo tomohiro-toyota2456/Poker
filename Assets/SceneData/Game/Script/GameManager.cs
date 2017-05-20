@@ -84,6 +84,9 @@ public class GameManager : MonoBehaviour
   {
     var skill1 = masterSkillDB.GetData(gameUserData.UserSkillSlot.skillSlot1);
 
+    skill1.MarkType = HandChecker.MarkType.Dia;
+    skill1.Detail = SkillData.SkillDetail.AllChangeFlush ;
+
     if (skill1 == null)
     {
       playerSkillView.SetButtonText(0, "Empty");
@@ -279,6 +282,7 @@ public class GameManager : MonoBehaviour
   void DistributePhase()
   {
     //表示更新
+    handController.SetAllLock(false);
     SetViewBetCoin(gameUserData.BetCoin);
     SetViewHaveCoin(gameUserData.HaveCoin);
 
