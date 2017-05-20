@@ -95,6 +95,7 @@ public class ExcelSheetImporter : EditorWindow
       skillData.MarkType = ConvertMarkTypeFromStr(mark);
       skillData.Type = ConvertSkillTypeFromStr(skillType);
       skillData.Detail = ConvertSkillDetailFromStr(skillDetail);
+      skillData.Number = string.IsNullOrEmpty(value) ? 0 : int.Parse(value);
 
       AssetDatabase.CreateAsset(skillData, DataPath + "SkillData/" + skillData.SkillId + ".asset");
 
