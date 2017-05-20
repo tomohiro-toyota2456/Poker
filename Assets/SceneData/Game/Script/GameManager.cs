@@ -57,6 +57,7 @@ public class GameManager : MonoBehaviour
   {
     //ゲームで使うデータのロード
     gameUserData.LoadUserDB(DataBaseManager.Instance.GetDataBase<UserDB>());
+    masterSkillDB = DataBaseManager.Instance.GetDataBase<MasterSkillDB>();
 
     SetViewBetCoin(gameUserData.BetCoin);
     SetViewHaveCoin(gameUserData.HaveCoin);
@@ -70,10 +71,49 @@ public class GameManager : MonoBehaviour
 
     button.gameObject.SetActive(false);
 
+    SetSkill();
+
     //最初のフェーズへ
     ChangePhase(gamePhase);
     SceneChanger.Instance.IsInitialize = true;
 	}
+
+  void SetSkill()
+  {
+    var skill1 = masterSkillDB.GetData(gameUserData.UserSkillSlot.skillSlot1);
+
+    if (skill1 == null)
+    {
+      playerSkillView.SetButtonText(0, "Empty");
+    }
+    else
+    {
+      playerSkillView.SetButtonText(0, skill1.SkillName);
+    }
+
+    var skill2 = masterSkillDB.GetData(gameUserData.UserSkillSlot.skillSlot2);
+
+    if (skill2 == null)
+    {
+      playerSkillView.SetButtonText(1, "Empty");
+    }
+    else
+    {
+      playerSkillView.SetButtonText(1, skill2.SkillName);
+    }
+
+    var skill3 = masterSkillDB.GetData(gameUserData.UserSkillSlot.skillSlot3);
+
+    if (skill3 == null)
+    {
+      playerSkillView.SetButtonText(2, "Empty");
+    }
+    else
+    {
+      playerSkillView.SetButtonText(2, skill3.SkillName);
+    }
+
+  }
 
 
   void SetViewHaveCoin(long _haveCoin)
