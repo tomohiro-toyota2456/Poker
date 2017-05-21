@@ -37,4 +37,16 @@ using UnityEngine;
 
     return 0;//ここはないはず
   }
+
+  static public float GetBunus(int _counter)
+  {
+    float per = 0.1f;
+
+    int offset = _counter / 5;
+
+    per = per * (float)offset;
+
+    return per;
+  }
+
 }

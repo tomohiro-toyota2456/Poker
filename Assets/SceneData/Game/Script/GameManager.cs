@@ -271,7 +271,6 @@ public class GameManager : MonoBehaviour
     gameUserData.UseCoinAndSave();
 
     gamePhase = GamePhase.Distribute;
-    distributeManager.InitTrumpList();
     ChangePhase(gamePhase);
 
   }
@@ -283,6 +282,13 @@ public class GameManager : MonoBehaviour
     SetViewBetCoin(gameUserData.BetCoin);
     SetViewHaveCoin(gameUserData.HaveCoin);
 
+    handController.SetSelect(0, false);
+    handController.SetSelect(1, false);
+    handController.SetSelect(2, false);
+    handController.SetSelect(3, false);
+    handController.SetSelect(4, false);
+
+    distributeManager.InitTrumpList();
     StartCoroutine(Distribute());
   }
 
@@ -491,6 +497,7 @@ public class GameManager : MonoBehaviour
       gamePopupManager.OpenContinuePopup(gameUserData.BetCoin,bonusRate, () =>
       {
         ContinueCounter++;
+        bonusRate = GameCommon.GetBunus(ContinueCounter);
         gamePhase = GamePhase.Distribute;
         ChangePhase(gamePhase);
       },
