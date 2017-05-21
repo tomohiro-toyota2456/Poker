@@ -84,9 +84,6 @@ public class GameManager : MonoBehaviour
   {
     var skill1 = masterSkillDB.GetData(gameUserData.UserSkillSlot.skillSlot1);
 
-    skill1.MarkType = HandChecker.MarkType.Dia;
-    skill1.Detail = SkillData.SkillDetail.AllChangeFlush ;
-
     if (skill1 == null)
     {
       playerSkillView.SetButtonText(0, "Empty");
@@ -98,7 +95,7 @@ public class GameManager : MonoBehaviour
 
       Action action = () =>
       {
-        gamePopupManager.OpenSkillDetailPopup(skill1.SkillName, skill1.Dist, () =>
+        gamePopupManager.OpenSkillDetailPopup(skill1.SkillName, skill1.Dist,skill1.CoolTime, ContinueCounter, () =>
           {
             UseSkill(skill1,1);
           }, null);
@@ -120,7 +117,7 @@ public class GameManager : MonoBehaviour
 
       Action action = () =>
       {
-        gamePopupManager.OpenSkillDetailPopup(skill2.SkillName, skill2.Dist, () =>
+        gamePopupManager.OpenSkillDetailPopup(skill2.SkillName, skill2.Dist, skill2.CoolTime, ContinueCounter,() =>
         {
           UseSkill(skill2,2);
         }, null);
@@ -143,7 +140,7 @@ public class GameManager : MonoBehaviour
 
       Action action = () =>
       {
-        gamePopupManager.OpenSkillDetailPopup(skill3.SkillName, skill3.Dist, () =>
+        gamePopupManager.OpenSkillDetailPopup(skill3.SkillName, skill3.Dist, skill3.CoolTime, ContinueCounter,() =>
         {
           UseSkill(skill3,3);
         }, null);
@@ -493,6 +490,7 @@ public class GameManager : MonoBehaviour
     {
       gamePopupManager.OpenContinuePopup(gameUserData.BetCoin,bonusRate, () =>
       {
+        ContinueCounter++;
         gamePhase = GamePhase.Distribute;
         ChangePhase(gamePhase);
       },
@@ -503,6 +501,7 @@ public class GameManager : MonoBehaviour
     }
     else
     {
+      ContinueCounter = 0;
       gamePopupManager.OpenConfirmPopup(()=>
       {
         gamePhase = GamePhase.Bet;

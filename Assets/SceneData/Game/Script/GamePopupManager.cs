@@ -12,6 +12,8 @@ public class GamePopupManager : MonoBehaviour
   BetPopup betPopup;
   [SerializeField]
   ContinuePopup continuePopup;
+  [SerializeField]
+  SkillViewPopup skillViewPopup;
 
   PopupManager popupManager;
 
@@ -77,10 +79,10 @@ public class GamePopupManager : MonoBehaviour
     popupManager.OpenPopup(pp, null);
   }
 
-  public void OpenSkillDetailPopup(string _skillName,string _dist,Action _yesAction,Action _noAction)
+  public void OpenSkillDetailPopup(string _skillName,string _dist,int _coolTime,int _count,Action _yesAction,Action _noAction)
   {
-    var pp = popupManager.Create<SimplePopup>(simplePopup);
-    pp.Init(SimplePopup.PopupType.YesNo, _skillName, _dist, _yesAction, _noAction);
+    var pp = popupManager.Create<SkillViewPopup>(skillViewPopup);
+    pp.Init(_skillName, _dist,_coolTime,_count, _yesAction, _noAction);
     popupManager.OpenPopup(pp, null);
   }
 	

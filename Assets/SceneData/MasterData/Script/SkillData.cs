@@ -18,6 +18,8 @@ public class SkillData : ScriptableObject
   int number;
   [SerializeField]
   HandChecker.MarkType markType;
+  [SerializeField]
+  int coolTime;
 
   public string SkillId { get { return skillId; } set { skillId = value; } }
   public string SkillName { get { return skillName; } set { skillName = value; } }
@@ -26,6 +28,7 @@ public class SkillData : ScriptableObject
   public SkillDetail Detail { get { return skillDetail; } set { skillDetail = value; } }
   public int Number { get { return number; }set { number = value; } }
   public HandChecker.MarkType MarkType { get { return markType; }set { markType = value; } } 
+  public int CoolTime { get { return coolTime; }set { coolTime = value; } }
 
   public enum SkillType
   {
