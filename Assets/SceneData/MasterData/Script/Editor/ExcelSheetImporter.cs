@@ -87,8 +87,9 @@ public class ExcelSheetImporter : EditorWindow
       string skillDetail = reader.GetCellData(cnt, 4);
       string value = reader.GetCellData(cnt, 5);
       string mark = reader.GetCellData(cnt, 6);
-
+      
       SkillData skillData = CreateInstance<SkillData>();
+      /*
       skillData.SkillId = skillId;
       skillData.SkillName = skillName;
       skillData.Dist = dist;
@@ -96,7 +97,7 @@ public class ExcelSheetImporter : EditorWindow
       skillData.Type = ConvertSkillTypeFromStr(skillType);
       skillData.Detail = ConvertSkillDetailFromStr(skillDetail);
       skillData.Number = string.IsNullOrEmpty(value) ? 0 : int.Parse(value);
-
+      */
       AssetDatabase.CreateAsset(skillData, DataPath + "SkillData/" + skillData.SkillId + ".asset");
 
       list.Add(skillData);
@@ -111,7 +112,7 @@ public class ExcelSheetImporter : EditorWindow
     Debug.Log("CreateAssetFinish");
 
   }
-
+  /*
   SkillData.SkillType ConvertSkillTypeFromStr(string _typeStr)
   {
     SkillData.SkillType type = SkillData.SkillType.Draw;
@@ -164,7 +165,7 @@ public class ExcelSheetImporter : EditorWindow
 
     return detail;
   }
-
+  */
   HandChecker.MarkType ConvertMarkTypeFromStr(string _markStr)
   {
     HandChecker.MarkType markType = HandChecker.MarkType.Clover;

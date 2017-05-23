@@ -41,6 +41,15 @@ public struct GameUserData
     userDB.SaveHaveCoin();
   }
 
+  //追加
+  public void AddBetAndSave(long _val)
+  {
+    betCoin += _val;
+    haveCoin -= _val;
+    userDB.SetCoin(haveCoin);
+    userDB.SaveHaveCoin();
+  }
+
   public void GetCoinAndSave()
   {
     //現在のベット数から所持コインを足して

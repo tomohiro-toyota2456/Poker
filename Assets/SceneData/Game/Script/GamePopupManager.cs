@@ -79,10 +79,10 @@ public class GamePopupManager : MonoBehaviour
     popupManager.OpenPopup(pp, null);
   }
 
-  public void OpenSkillDetailPopup(string _skillName,string _dist,int _coolTime,int _count,Action _yesAction,Action _noAction)
+  public void OpenSkillDetailPopup(SkillData _skillData,int _count,Action _yesAction,Action _noAction)
   {
     var pp = popupManager.Create<SkillViewPopup>(skillViewPopup);
-    pp.Init(_skillName, _dist,_coolTime,_count, _yesAction, _noAction);
+    pp.Init(_skillData,_count, _yesAction, _noAction);
     popupManager.OpenPopup(pp, null);
   }
 	

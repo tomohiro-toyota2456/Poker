@@ -42,11 +42,13 @@ public class GameManager : MonoBehaviour
   int enableChangeNum = 5;//変更できる数
   bool isForceChange = false;
 
+  float magnification = 1;
+
   public enum GamePhase
   {
     Bet,//賭ける
-    Distribute,//配布
     EnemySkill,//ディーラースキル発動かどうか
+    Distribute,//配布
     Change,
     SecondDistribute,
     Result,
@@ -55,6 +57,7 @@ public class GameManager : MonoBehaviour
 
   GamePhase gamePhase = GamePhase.Bet;
   SkillData skillData;
+  SkillData passiveSkillData = null;
 
 	// Use this for initialization
 	void Start ()
@@ -91,11 +94,15 @@ public class GameManager : MonoBehaviour
     }
     else
     {
+      if (skill1.Type == SkillData.SkillType.Passive)
+      {
+        passiveSkillData = skill1;
+      }
       playerSkillView.SetButtonText(0, skill1.SkillName);
 
       Action action = () =>
       {
-        gamePopupManager.OpenSkillDetailPopup(skill1.SkillName, skill1.Dist,skill1.CoolTime, ContinueCounter, () =>
+        gamePopupManager.OpenSkillDetailPopup(skill1, ContinueCounter, () =>
           {
             UseSkill(skill1,1);
           }, null);
@@ -105,7 +112,6 @@ public class GameManager : MonoBehaviour
     }
 
     var skill2 = masterSkillDB.GetData(gameUserData.UserSkillSlot.skillSlot2);
-
     if (skill2 == null)
     {
       playerSkillView.SetButtonText(1, "Empty");
@@ -113,11 +119,16 @@ public class GameManager : MonoBehaviour
     }
     else
     {
+      if (skill2.Type == SkillData.SkillType.Passive)
+      {
+        passiveSkillData = skill2;
+      }
+
       playerSkillView.SetButtonText(1, skill2.SkillName);
 
       Action action = () =>
       {
-        gamePopupManager.OpenSkillDetailPopup(skill2.SkillName, skill2.Dist, skill2.CoolTime, ContinueCounter,() =>
+        gamePopupManager.OpenSkillDetailPopup(skill2, ContinueCounter,() =>
         {
           UseSkill(skill2,2);
         }, null);
@@ -129,6 +140,7 @@ public class GameManager : MonoBehaviour
 
     var skill3 = masterSkillDB.GetData(gameUserData.UserSkillSlot.skillSlot3);
 
+
     if (skill3 == null)
     {
       playerSkillView.SetButtonText(2, "Empty");
@@ -136,11 +148,16 @@ public class GameManager : MonoBehaviour
     }
     else
     {
+      if (skill3.Type == SkillData.SkillType.Passive)
+      {
+        passiveSkillData = skill3;
+      }
+
       playerSkillView.SetButtonText(2, skill3.SkillName);
 
       Action action = () =>
       {
-        gamePopupManager.OpenSkillDetailPopup(skill3.SkillName, skill3.Dist, skill3.CoolTime, ContinueCounter,() =>
+        gamePopupManager.OpenSkillDetailPopup(skill3, ContinueCounter,() =>
         {
           UseSkill(skill3,3);
         }, null);
@@ -156,46 +173,48 @@ public class GameManager : MonoBehaviour
   {
     skillData = _skillData;
 
-    //固定引き系の場合
-    if(skillData.Detail == SkillData.SkillDetail.FixedNumber || skillData.Detail == SkillData.SkillDetail.FiexedMark)
+    switch(skillData.Type)
     {
-      enableChangeNum = 1; 
-    }
-    else if( skillData.Detail == SkillData.SkillDetail.AllChangeOnePair || skillData.Detail == SkillData.SkillDetail.AllChangeTwoPair || skillData.Detail == SkillData.SkillDetail.AllChangeFlush)
-    {
-      enableChangeNum = 5;
+      case SkillData.SkillType.Magnification:
+        magnification = skillData.Effect;
+        handController.SetSelect(0, true);
+        handController.SetSelect(1, true);
+        handController.SetSelect(2, true);
+        handController.SetSelect(3, true);
+        handController.SetSelect(4, true);
+        handController.SetAllLock(true);
+        break;
+      case SkillData.SkillType.Bet:
 
-      handController.SetSelect(0, true);
-      handController.SetSelect(1, true);
-      handController.SetSelect(2, true);
-      handController.SetSelect(3, true);
-      handController.SetSelect(4, true);
-      handController.SetAllLock(true);
-    }
-    else if(skillData.Detail == SkillData.SkillDetail.Raise)
-    {
+        if(gameUserData.HaveCoin < skillData.Effect)
+        {
+          gameUserData.AddBetAndSave(gameUserData.HaveCoin);
+        }
+        else
+        {
+          gameUserData.AddBetAndSave((long)skillData.Effect);
+        }
 
-    }
-
-    switch(_useSlot)
-    {
-      case 1:
-        gameUserData.IsUseSkill1 = true;
-        playerSkillView.SetButtonInteractable(0, false);
+        SetViewHaveCoin(gameUserData.HaveCoin);
+        SetViewBetCoin(gameUserData.BetCoin);
+        skillData = null;
         break;
 
-      case 2:
-        gameUserData.IsUseSkill2 = true;
-        playerSkillView.SetButtonInteractable(1, false);
-        break;
+      case SkillData.SkillType.AllBet:
+        handController.SetSelect(0, true);
+        handController.SetSelect(1, true);
+        handController.SetSelect(2, true);
+        handController.SetSelect(3, true);
+        handController.SetSelect(4, true);
+        handController.SetAllLock(true);
 
-      case 3:
-        gameUserData.IsUseSkill3 = true;
-        playerSkillView.SetButtonInteractable(2, false);
+        gameUserData.AddBetAndSave(gameUserData.HaveCoin);
+
+        SetViewHaveCoin(gameUserData.HaveCoin);
+        SetViewBetCoin(gameUserData.BetCoin);
+        skillData = null;
         break;
     }
-
-    playerSkillView.SetActiveSkillView(false);
   }
 
 
@@ -217,12 +236,12 @@ public class GameManager : MonoBehaviour
         BetPhase();
         break;
 
-      case GamePhase.Distribute:
-        DistributePhase();
-        break;
-
       case GamePhase.EnemySkill:
         EnemySkillPhase();
+        break;
+
+      case GamePhase.Distribute:
+        DistributePhase();
         break;
 
       case GamePhase.Change:
@@ -270,9 +289,16 @@ public class GameManager : MonoBehaviour
     //セーブ
     gameUserData.UseCoinAndSave();
 
-    gamePhase = GamePhase.Distribute;
+    gamePhase = GamePhase.EnemySkill;
     ChangePhase(gamePhase);
 
+  }
+
+
+  void EnemySkillPhase()
+  {
+    gamePhase = GamePhase.Distribute;
+    ChangePhase(gamePhase);
   }
 
   void DistributePhase()
@@ -299,34 +325,29 @@ public class GameManager : MonoBehaviour
       handController.SetPosition(i, new Vector2(0, 10000));
     }
 
-      for (int i = 0; i < 5; i++)
+
+    var drawArray = distributeManager.DrawTrumpSkill(passiveSkillData);
+    
+     for (int i = 0; i < 5; i++)
     {
-      var data = distributeManager.DrawTrump();
-      handController.SetHandData(i,data );
+      handController.SetHandData(i,drawArray[i]);
 
       //Debug
-      Debug.Log(i.ToString() + ":" + data.mark + "," + data.number);
+      Debug.Log(i.ToString() + ":" + drawArray[i].mark + "," + drawArray[i].number);
 
       handController.Move(true, i, cardMoveTime, null);
       yield return new WaitForSeconds(cardMoveTime);
     }
 
-    
 
-    while(handController.IsMove())
+    while (handController.IsMove())
     {
       yield return null;
     }
 
-    gamePhase = GamePhase.EnemySkill;
-    ChangePhase(gamePhase);
-
-  }
-
-  void EnemySkillPhase()
-  {
     gamePhase = GamePhase.Change;
     ChangePhase(gamePhase);
+
   }
 
   void ChangePhase()
@@ -395,7 +416,7 @@ public class GameManager : MonoBehaviour
     }
     else
     {
-      var hand = distributeManager.DrawTrump(skillData, handController.GetHandData(), idxArray);
+      var hand = distributeManager.DrawTrumpSkill(skillData);
       handController.SetHandData(hand);
       for (int i = 0; i < idxArray.Length; i++)
       {
@@ -433,8 +454,11 @@ public class GameManager : MonoBehaviour
     handImageView.InAnimationScl(0.5f, null);
     
     //役が成立していればボーナス値も適用する
-    float bonusVal = type != HandChecker.HandType.NoPair ? bonusRate : 0;
-    gameUserData.BetCoin = (long)(gameUserData.BetCoin * (GameCommon.GetHandScale(type) + bonusVal));
+    float bonusVal = type != HandChecker.HandType.NoPair ? bonusRate : ContinueCounter = 0;
+    float magnificationSum = (GameCommon.GetHandScale(type) + bonusVal) * magnification;
+    gameUserData.BetCoin = (long)(gameUserData.BetCoin * magnificationSum);
+
+    if(gameUserData.BetCoin >= GameCommon.maxBet)
 
     Debug.Log(type);
     yield return new WaitForSeconds(2.5f);

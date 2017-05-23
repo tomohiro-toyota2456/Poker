@@ -13,11 +13,9 @@ public class SkillData : ScriptableObject
   [SerializeField]
   SkillType skillType;
   [SerializeField]
-  SkillDetail skillDetail;
+  float effect;
   [SerializeField]
-  int number;
-  [SerializeField]
-  HandChecker.MarkType markType;
+  HandChecker.HandType handType;
   [SerializeField]
   int coolTime;
 
@@ -25,25 +23,16 @@ public class SkillData : ScriptableObject
   public string SkillName { get { return skillName; } set { skillName = value; } }
   public string Dist { get { return dist; }set { dist = value; } }
   public SkillType Type { get { return skillType; } set { skillType = value; } }
-  public SkillDetail Detail { get { return skillDetail; } set { skillDetail = value; } }
-  public int Number { get { return number; }set { number = value; } }
-  public HandChecker.MarkType MarkType { get { return markType; }set { markType = value; } } 
+  public float Effect { get { return effect; }set { effect = value; } }
   public int CoolTime { get { return coolTime; }set { coolTime = value; } }
+  public HandChecker.HandType Hand { get { return handType; }set { handType = value; } }
 
   public enum SkillType
   {
-    Draw,
-    Raise
-  }
-
-  public enum SkillDetail
-  {
-    FixedNumber,
-    FiexedMark,
-    AllChangeOnePair,
-    AllChangeTwoPair,
-    AllChangeFlush,
-    Raise,
-    ForceRaise,
+    Passive,//使わなくても発動するスキル Hand Effect
+    ProbabilityUp,//確率上昇 Hand Effect CoolTime
+    Bet,//ついか賭け (int)effect
+    AllBet,//全追加賭け AllChange
+    Magnification,//倍率up系 Effect CoolTime
   }
 }
