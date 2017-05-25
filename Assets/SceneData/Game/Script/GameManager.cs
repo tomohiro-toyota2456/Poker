@@ -175,6 +175,16 @@ public class GameManager : MonoBehaviour
 
     switch(skillData.Type)
     {
+      case SkillData.SkillType.ProbabilityUp:
+
+        handController.SetSelect(0, true);
+        handController.SetSelect(1, true);
+        handController.SetSelect(2, true);
+        handController.SetSelect(3, true);
+        handController.SetSelect(4, true);
+        handController.SetAllLock(true);
+        break;
+
       case SkillData.SkillType.Magnification:
         magnification = skillData.Effect;
         handController.SetSelect(0, true);
