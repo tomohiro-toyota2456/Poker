@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using Excel;
+using System;
 
 public class ExcelSheetImporter : EditorWindow
 {
@@ -68,7 +69,7 @@ public class ExcelSheetImporter : EditorWindow
   {
     ExcelReader reader = new ExcelReader();
     reader.Open(skillDataExcelPath);
-    reader.SetSheet("シート1");
+    reader.SetSheet("UserSkillData");
     List<SkillData> list = new List<SkillData>();
     
     int cnt = 1;
@@ -84,114 +85,77 @@ public class ExcelSheetImporter : EditorWindow
       string skillName = reader.GetCellData(cnt, 1);
       string dist = reader.GetCellData(cnt, 2);
       string skillType = reader.GetCellData(cnt, 3);
-      string skillDetail = reader.GetCellData(cnt, 4);
-      string value = reader.GetCellData(cnt, 5);
-      string mark = reader.GetCellData(cnt, 6);
+      string effect = reader.GetCellData(cnt, 4);
+      string coolTime = reader.GetCellData(cnt, 5);
+      string hand = reader.GetCellData(cnt, 6);
       
       SkillData skillData = CreateInstance<SkillData>();
-      /*
+      
       skillData.SkillId = skillId;
       skillData.SkillName = skillName;
       skillData.Dist = dist;
-      skillData.MarkType = ConvertMarkTypeFromStr(mark);
-      skillData.Type = ConvertSkillTypeFromStr(skillType);
-      skillData.Detail = ConvertSkillDetailFromStr(skillDetail);
-      skillData.Number = string.IsNullOrEmpty(value) ? 0 : int.Parse(value);
-      */
-      AssetDatabase.CreateAsset(skillData, DataPath + "SkillData/" + skillData.SkillId + ".asset");
+      skillData.Type = string.IsNullOrEmpty(skillType) ? SkillData.SkillType.AllBet : (SkillData.SkillType)Enum.Parse(typeof(SkillData.SkillType), skillType); 
+      skillData.Effect = string.IsNullOrEmpty(effect) ? 0 : float.Parse(effect);
+      skillData.CoolTime = string.IsNullOrEmpty(coolTime) ? 0 : int.Parse(coolTime);
+      skillData.Hand = string.IsNullOrEmpty(hand) ? HandChecker.HandType.NoPair : (HandChecker.HandType)Enum.Parse(typeof(HandChecker.HandType), hand);
+
+      AssetDatabase.CreateAsset(skillData, DataPath + "SkillData/UserSkillData/" + skillData.SkillId + ".asset");
 
       list.Add(skillData);
       cnt++;
     }
 
+    Debug.Log("CreateSkillAssetFinish");
+    Debug.Log("StartCreateEnemySkillAsset");
+
+    reader.SetSheet("EnemySkillData");
+
+    List<EnemySkillData> elist = new List<EnemySkillData>();
+    cnt = 1;
+    while (true)
+    {
+      string skillId = reader.GetCellData(cnt, 0);
+
+      if (string.IsNullOrEmpty(skillId))
+      {
+        break;
+      }
+
+      string skillName = reader.GetCellData(cnt, 1);
+      string dist = reader.GetCellData(cnt, 2);
+      string effect = reader.GetCellData(cnt, 3);
+      string skillType = reader.GetCellData(cnt, 4);
+      string orderType = reader.GetCellData(cnt, 5);
+      string colorType = reader.GetCellData(cnt, 6);
+      string handType = reader.GetCellData(cnt, 7);
+      string targetSkillType = reader.GetCellData(cnt, 8);
+
+      EnemySkillData skillData = CreateInstance<EnemySkillData>();
+
+      skillData.SkillId = skillId;
+      skillData.SkillName = skillName;
+      skillData.Dist = dist;
+      skillData.Effect = string.IsNullOrEmpty(effect) ? 0 : float.Parse(effect);
+      skillData.SType = string.IsNullOrEmpty(skillType) ? EnemySkillData.EnemySkillType.ForceAllChange : (EnemySkillData.EnemySkillType)Enum.Parse(typeof(EnemySkillData.EnemySkillType), skillType);
+      skillData.OType = string.IsNullOrEmpty(orderType) ? EnemySkillData.OrderType.All : (EnemySkillData.OrderType)Enum.Parse(typeof(EnemySkillData.OrderType), orderType);
+      skillData.CType = string.IsNullOrEmpty(colorType) ? EnemySkillData.ColorType.Black : (EnemySkillData.ColorType)Enum.Parse(typeof(EnemySkillData.ColorType), colorType);
+      skillData.HType = string.IsNullOrEmpty(handType) ? HandChecker.HandType.NoPair : (HandChecker.HandType)Enum.Parse(typeof(HandChecker.HandType), handType);
+      skillData.TargetSkillType = string.IsNullOrEmpty(targetSkillType) ? SkillData.SkillType.AllBet : (SkillData.SkillType)Enum.Parse(typeof(SkillData.SkillType), targetSkillType);
+
+      AssetDatabase.CreateAsset(skillData, DataPath + "SkillData/EnemySkillData/" + skillData.SkillId + ".asset");
+
+      elist.Add(skillData);
+      cnt++;
+    }
+
     MasterSkillData master = CreateInstance<MasterSkillData>();
     master.SkillDataArray = list.ToArray();
+    master.EnemySkillArray = elist.ToArray();
 
     AssetDatabase.CreateAsset(master, DataPath + "SkillData/MasterData/SkillMaster.asset");
-
-    Debug.Log("CreateAssetFinish");
-
+    reader.Close();
   }
-  /*
-  SkillData.SkillType ConvertSkillTypeFromStr(string _typeStr)
-  {
-    SkillData.SkillType type = SkillData.SkillType.Draw;
-    switch(_typeStr)
-    {
-      case "Draw":
-        type = SkillData.SkillType.Draw;
-        break;
-
-      case "Raise":
-        type = SkillData.SkillType.Raise;
-        break;
-    }
-
-    return type;
-  }
-
-  SkillData.SkillDetail ConvertSkillDetailFromStr(string _detailStr)
-  {
-    SkillData.SkillDetail detail = SkillData.SkillDetail.Raise;
-    switch(_detailStr)
-    {
-      case "FixedNumber":
-        detail = SkillData.SkillDetail.FixedNumber;
-        break;
-
-      case "FixedMark":
-        detail = SkillData.SkillDetail.FiexedMark;
-        break;
-      case "AllChangeOnePair":
-        detail = SkillData.SkillDetail.AllChangeOnePair;
-        break;
-
-      case "AllChangeTwoPair":
-        detail = SkillData.SkillDetail.AllChangeTwoPair;
-        break;
-
-      case "AllChangeFlush":
-        detail = SkillData.SkillDetail.AllChangeFlush;
-        break;
-
-      case "Raise":
-        detail = SkillData.SkillDetail.Raise;
-        break;
-
-      case "ForceRaise":
-        detail = SkillData.SkillDetail.ForceRaise;
-        break;
-    }
-
-    return detail;
-  }
-  */
-  HandChecker.MarkType ConvertMarkTypeFromStr(string _markStr)
-  {
-    HandChecker.MarkType markType = HandChecker.MarkType.Clover;
-
-    switch(_markStr)
-    {
-      case "Heart":
-        markType = HandChecker.MarkType.Heart;
-        break;
-
-      case "Dia":
-        markType = HandChecker.MarkType.Dia;
-        break;
-
-      case "Spade":
-        markType = HandChecker.MarkType.Spade;
-        break;
-
-      case "Clover":
-        markType = HandChecker.MarkType.Clover;
-        break;
-    }
-
-    return markType;
-  }
-
+ 
   void CreateItemData()
   {
     ExcelReader reader = new ExcelReader();
@@ -229,7 +193,7 @@ public class ExcelSheetImporter : EditorWindow
     AssetDatabase.CreateAsset(master, DataPath + "ItemData/MasterData/ItemMaster.asset");
 
     Debug.Log("CreateAssetFinish");
-
+    reader.Close();
   }
 
   void CreateShopData()
@@ -269,6 +233,7 @@ public class ExcelSheetImporter : EditorWindow
     AssetDatabase.CreateAsset(master, DataPath + "ShopData/MasterData/ShopMaster.asset");
 
     Debug.Log("CreateAssetFinish");
+    reader.Close();
   }
 
   void CreateExchangeShopData()
@@ -311,5 +276,6 @@ public class ExcelSheetImporter : EditorWindow
     AssetDatabase.CreateAsset(master, DataPath + "ExchangeShopData/MasterData/ExchangeShopMaster.asset");
 
     Debug.Log("CreateAssetFinish");
+    reader.Close();
   }
 }

@@ -20,4 +20,9 @@ public class MasterSkillDB : DataBase
     return cloneSkillData.SkillDataArray.FirstOrDefault(data => data.SkillId == _id);
   }
 
+  public EnemySkillData GetEnemyData(string _id)
+  {
+    return cloneSkillData.EnemySkillArray.FirstOrDefault(data => data.SkillId == _id);
+  }
+
 }
