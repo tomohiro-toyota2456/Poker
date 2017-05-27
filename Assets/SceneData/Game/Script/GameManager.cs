@@ -262,6 +262,9 @@ public class GameManager : MonoBehaviour
         skillData = null;
         break;
     }
+
+    gameUserData.UseSkill(_useSlot);
+    playerSkillView.SetButtonInteractable(_useSlot - 1, false);
   }
 
   public void UseEnemySkill(EnemySkillData _skillData)
@@ -303,7 +306,8 @@ public class GameManager : MonoBehaviour
         Debug.Log("UseOrder");
 
         break;
-    }   
+    }
+       
   }
 
 
@@ -357,6 +361,15 @@ public class GameManager : MonoBehaviour
 
   void BetPhase()
   {
+    //仮
+    gameUserData.UseSkill(0);
+    playerSkillView.SetButtonInteractable(0, true);
+    gameUserData.UseSkill(1);
+    playerSkillView.SetButtonInteractable(1, true);
+    gameUserData.UseSkill(2);
+    playerSkillView.SetButtonInteractable(2, true);
+
+
     StartCoroutine(Bet());
   }
 
@@ -582,6 +595,9 @@ public class GameManager : MonoBehaviour
 
   IEnumerator Result()
   {
+    //スキルビューを見えなくする
+    playerSkillView.SetActiveSkillView(false);
+
     var type = handChecker.CheckHand(handController.GetHandData());
     handImageView.SetActive(true);
     handImageView.SetSprite(type.GetHashCode());

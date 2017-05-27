@@ -32,6 +32,24 @@ public struct GameUserData
     isUseSkill3 = false;
   }
 
+  public void UseSkill(int _skillSlot)
+  {
+    switch(_skillSlot)
+    {
+      case 1:
+        isUseSkill1 = false;
+        break;
+
+      case 2:
+        isUseSkill2 = false;
+        break;
+
+      case 3:
+        isUseSkill3 = false;
+        break;
+    }
+  }
+
   //ゲームユーザーデータの所持コインの更新はこの二つの関数で行う
   public void UseCoinAndSave()
   {
