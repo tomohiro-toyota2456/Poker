@@ -138,10 +138,12 @@ public class GameManager : MonoBehaviour
       }
       playerSkillView.SetButtonText(0, skill1.SkillName);
 
+      int firstCnt1 = 100;
       Action action = () =>
       {
-        gamePopupManager.OpenSkillDetailPopup(skill1, ContinueCounter, () =>
+        gamePopupManager.OpenSkillDetailPopup(skill1, firstCnt1+ContinueCounter, () =>
           {
+            firstCnt1 = 0;
             UseSkill(skill1,1);
           }, null);
       };
@@ -163,11 +165,12 @@ public class GameManager : MonoBehaviour
       }
 
       playerSkillView.SetButtonText(1, skill2.SkillName);
-
+      int firstCnt2 = 100;
       Action action = () =>
       {
-        gamePopupManager.OpenSkillDetailPopup(skill2, ContinueCounter,() =>
+        gamePopupManager.OpenSkillDetailPopup(skill2,firstCnt2 + ContinueCounter,() =>
         {
+          firstCnt2 = 0;
           UseSkill(skill2,2);
         }, null);
       };
@@ -192,11 +195,12 @@ public class GameManager : MonoBehaviour
       }
 
       playerSkillView.SetButtonText(2, skill3.SkillName);
-
+      int firstCnt3 = 100;
       Action action = () =>
       {
-        gamePopupManager.OpenSkillDetailPopup(skill3, ContinueCounter,() =>
+        gamePopupManager.OpenSkillDetailPopup(skill3, firstCnt3+ContinueCounter, () =>
         {
+          firstCnt3 = 0;
           UseSkill(skill3,3);
         }, null);
       };

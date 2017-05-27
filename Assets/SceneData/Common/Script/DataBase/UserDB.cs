@@ -53,7 +53,7 @@ public class UserDB : DataBase
 
     if (string.IsNullOrEmpty(haveCoinStr))
     {
-      haveCoinStr = "1000";
+      haveCoinStr = "10000";
     }
 
     userData.haveCoin = long.Parse(haveCoinStr);
