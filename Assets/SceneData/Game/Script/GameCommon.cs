@@ -21,19 +21,19 @@ using UnityEngine;
       case HandChecker.HandType.TwoPair:
         return 1.0f;
       case HandChecker.HandType.ThreeCard:
-        return 3.0f;
+        return 1.0f;
       case HandChecker.HandType.Straight:
-        return 5.0f;
+        return 3.0f;
       case HandChecker.HandType.Flush:
-        return 7.0f;
+        return 4.0f;
       case HandChecker.HandType.FullHouse:
-        return 10.0f;
+        return 7.0f;
       case HandChecker.HandType.FourCard:
-        return 20.0f;
+        return 10.0f;
       case HandChecker.HandType.StraightFlush:
-        return 50.0f;
+        return 25.0f;
       case HandChecker.HandType.RoyalStraightFlush:
-        return 100.0f;
+        return 500.0f;
     }
 
     return 0;//ここはないはず

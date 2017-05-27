@@ -29,6 +29,8 @@ public class GameManager : MonoBehaviour
   TextMeshProUGUI haveCoinText;
   [SerializeField]
   TextMeshProUGUI betCoinText;
+  [SerializeField]
+  ContinueMagMasterData magMasterData;
 
   HandChecker handChecker;　
   TrumpDistributeManager distributeManager;//配る用スクリプト
@@ -671,7 +673,7 @@ public class GameManager : MonoBehaviour
       gamePopupManager.OpenContinuePopup(gameUserData.BetCoin, bonusRate, () =>
       {
         ContinueCounter++;
-        bonusRate = GameCommon.GetBunus(ContinueCounter);
+        bonusRate = magMasterData.GetContinueMag(ContinueCounter);
         gamePhase = GamePhase.TrumpInit;
         ChangePhase(gamePhase);
       },
