@@ -423,11 +423,11 @@ public class GameManager : MonoBehaviour
 
   void EnemySkillPhase()
   {
-    var skill =  gameEnemySkillData.UseSkill();
+   // var skill =  gameEnemySkillData.UseSkill();
 
-    UseEnemySkill(skill);
+ //   UseEnemySkill(skill);
 
-    gameEnemySkillData.AddCoolTimeCnt();
+   // gameEnemySkillData.AddCoolTimeCnt();
 
     gamePhase = GamePhase.Distribute;
     ChangePhase(gamePhase);
