@@ -70,7 +70,7 @@ public class UserDB : DataBase
 
       slot.skillSlot1 = "s00001";
       slot.skillSlot2 = "s00002";
-      slot.skillSlot3 = "";
+      slot.skillSlot3 = "s00003";
 
       userData.skillSlot = slot;
     }

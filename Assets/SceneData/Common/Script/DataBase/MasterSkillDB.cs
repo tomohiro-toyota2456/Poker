@@ -13,6 +13,7 @@ public class MasterSkillDB : DataBase
   public override void Init()
   {
     cloneSkillData = Instantiate<MasterSkillData>(masterSkillData);
+    cloneSkillData.hideFlags = HideFlags.DontSave;
   }
 
   public SkillData GetData(string _id)
@@ -23,6 +24,13 @@ public class MasterSkillDB : DataBase
   public EnemySkillData GetEnemyData(string _id)
   {
     return cloneSkillData.EnemySkillArray.FirstOrDefault(data => data.SkillId == _id);
+  }
+
+  public EnemySkillData[] GetEnemyDataArray()
+  {
+    EnemySkillData[] dataArray = new EnemySkillData[cloneSkillData.EnemySkillArray.Length];
+    cloneSkillData.EnemySkillArray.CopyTo(dataArray, 0);
+    return dataArray;
   }
 
 }

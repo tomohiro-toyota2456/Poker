@@ -215,4 +215,20 @@ public class HandChecker
 
   #endregion
 
+  //マークが手元に含まれているのかをチェックする
+  bool CheckOrderMark(MarkType[] _markArray,TrumpData[] _dataArray)
+  {
+    for(int i = 0; i < _dataArray.Length; i++)
+    {
+      for(int j = 0; j < _markArray.Length; j++)
+      {
+        if(_dataArray[i].mark == _markArray[j])
+        {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
 }

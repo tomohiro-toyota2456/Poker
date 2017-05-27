@@ -8,6 +8,7 @@ using UnityEngine;
   static public readonly long maxCoin  = 999999999;
   static public readonly int skillSlot = 3;
   static public readonly long maxBet = 5000000000;
+  static public readonly int maxItem = 99;
 
   static public float GetHandScale(HandChecker.HandType _type)
   {
@@ -47,6 +48,26 @@ using UnityEngine;
     per = per * (float)offset;
 
     return per;
+  }
+
+  static public HandChecker.MarkType[] ConvertMarkFromColor(EnemySkillData.ColorType _colorType)
+  {
+    HandChecker.MarkType[] markType = new HandChecker.MarkType[2];
+
+    switch(_colorType)
+    {
+      case EnemySkillData.ColorType.Red:
+        markType[0] = HandChecker.MarkType.Heart;
+        markType[1] = HandChecker.MarkType.Dia;
+        break;
+
+      case EnemySkillData.ColorType.Black:
+        markType[0] = HandChecker.MarkType.Clover;
+        markType[1] = HandChecker.MarkType.Spade;
+        break;
+    }
+
+    return markType;
   }
 
 }

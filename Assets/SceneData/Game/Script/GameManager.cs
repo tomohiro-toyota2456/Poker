@@ -34,19 +34,27 @@ public class GameManager : MonoBehaviour
   TrumpDistributeManager distributeManager;//配る用スクリプト
   GameUserData gameUserData;
   MasterSkillDB masterSkillDB;
+  GameEnemySkillData gameEnemySkillData;
 
   float bonusRate = 0;
   int ContinueCounter = 0;
   long bet = 0;
+  long firstBet = 0;
 
   int enableChangeNum = 5;//変更できる数
   bool isForceChange = false;
+  bool isForceContinue = false;
 
-  float magnification = 1;
+  bool isEnablePassiveSkill = true;
+  bool isEnanleMagnificationSkill = true;
+  bool isEnableProbablityUpSkill = true;
+
+  float magnification = 1;//倍率
 
   public enum GamePhase
   {
     Bet,//賭ける
+    TrumpInit,
     EnemySkill,//ディーラースキル発動かどうか
     Distribute,//配布
     Change,
@@ -73,15 +81,43 @@ public class GameManager : MonoBehaviour
     distributeManager = new TrumpDistributeManager();
     //手札の役チェックの作成
     handChecker = new HandChecker();
+    //
+    gameEnemySkillData = new GameEnemySkillData();
 
     button.gameObject.SetActive(false);
 
     SetSkill();
+    SetEnemySkill();
     playerSkillView.SetActiveSkillView(false);
     //最初のフェーズへ
     ChangePhase(gamePhase);
     SceneChanger.Instance.IsInitialize = true;
 	}
+
+  void SetEnemySkill()
+  {
+    var dataArray = masterSkillDB.GetEnemyDataArray();
+
+    int[] idxArray = new int[3] { -1, -1, -1 };
+
+    for(int i = 0; i < 3; i++)
+    {
+      while(true)
+      {
+        int idx = UnityEngine.Random.Range(0, dataArray.Length);
+
+        if (idx != idxArray[0] && idx != idxArray[1] && idx != idxArray[2])
+        {
+          idxArray[i] = idx;
+          break;
+        }
+      }
+    }
+
+    gameEnemySkillData.SetSkillData(0, dataArray[idxArray[0]]);
+    gameEnemySkillData.SetSkillData(1, dataArray[idxArray[1]]);
+    gameEnemySkillData.SetSkillData(2, dataArray[idxArray[2]]);
+  }
 
   void SetSkill()
   {
@@ -227,6 +263,48 @@ public class GameManager : MonoBehaviour
     }
   }
 
+  public void UseEnemySkill(EnemySkillData _skillData)
+  {
+    if (_skillData == null)
+      return;
+
+    switch (_skillData.SType)
+    {
+      case EnemySkillData.EnemySkillType.SealSkill:
+        Debug.Log("UseSeal");
+        switch(_skillData.TargetSkillType)
+        {
+          case SkillData.SkillType.Passive:
+            isEnablePassiveSkill = false;
+            break;
+          case SkillData.SkillType.ProbabilityUp:
+            isEnableProbablityUpSkill = false;
+            break;
+          case SkillData.SkillType.Magnification:
+            isEnanleMagnificationSkill = false;
+            break;
+        }
+
+        break;
+      case EnemySkillData.EnemySkillType.Killer:
+        Debug.Log("UseKiller");
+        distributeManager.KillTrumpFromNumber((int)_skillData.Effect);
+        break;
+      case EnemySkillData.EnemySkillType.ForceContinue:
+        Debug.Log("UseContinue");
+        isForceContinue = true;
+        break;
+      case EnemySkillData.EnemySkillType.ForceAllChange:
+        Debug.Log("AllChange");
+        isForceChange = true;
+        break;
+      case EnemySkillData.EnemySkillType.Order:
+        Debug.Log("UseOrder");
+
+        break;
+    }
+  }
+
 
   void SetViewHaveCoin(long _haveCoin)
   {
@@ -244,6 +322,10 @@ public class GameManager : MonoBehaviour
     {
       case GamePhase.Bet:
         BetPhase();
+        break;
+
+      case GamePhase.TrumpInit:
+        TrumpInitPhase();
         break;
 
       case GamePhase.EnemySkill:
@@ -296,27 +378,31 @@ public class GameManager : MonoBehaviour
     //この時点でベット確定し、セーブ
     //ベットコイン決定
     gameUserData.BetCoin = bet;
+    firstBet = bet;
     //セーブ
     gameUserData.UseCoinAndSave();
 
-    gamePhase = GamePhase.EnemySkill;
+    gamePhase = GamePhase.TrumpInit;
     ChangePhase(gamePhase);
 
   }
 
-
-  void EnemySkillPhase()
+  void TrumpInitPhase()
   {
-    gamePhase = GamePhase.Distribute;
-    ChangePhase(gamePhase);
-  }
 
-  void DistributePhase()
-  {
-    //表示更新
-    handController.SetAllLock(false);
-    SetViewBetCoin(gameUserData.BetCoin);
-    SetViewHaveCoin(gameUserData.HaveCoin);
+    isEnablePassiveSkill = true;
+    isEnanleMagnificationSkill = true;
+    isEnableProbablityUpSkill = true;
+
+    magnification = 1;
+    isForceContinue = false;
+    isForceChange = false;
+
+    distributeManager.InitTrumpList();
+    for (int i = 0; i < 5; i++)
+    {
+      handController.SetPosition(i, new Vector2(0, 10000));
+    }
 
     handController.SetSelect(0, false);
     handController.SetSelect(1, false);
@@ -324,20 +410,46 @@ public class GameManager : MonoBehaviour
     handController.SetSelect(3, false);
     handController.SetSelect(4, false);
 
-    distributeManager.InitTrumpList();
+    //表示更新
+    handController.SetAllLock(false);
+
+    SetViewBetCoin(gameUserData.BetCoin);
+    SetViewHaveCoin(gameUserData.HaveCoin);
+
+    gamePhase = GamePhase.EnemySkill;
+    ChangePhase(gamePhase);
+  }
+
+
+  void EnemySkillPhase()
+  {
+    var skill =  gameEnemySkillData.UseSkill();
+
+    UseEnemySkill(skill);
+
+    gameEnemySkillData.AddCoolTimeCnt();
+
+    gamePhase = GamePhase.Distribute;
+    ChangePhase(gamePhase);
+  }
+
+  void DistributePhase()
+  {
     StartCoroutine(Distribute());
   }
 
   IEnumerator Distribute()
   {
-    for (int i = 0; i < 5; i++)
+    HandChecker.TrumpData[] drawArray = null;
+    if (isEnablePassiveSkill)
     {
-      handController.SetPosition(i, new Vector2(0, 10000));
+      drawArray = distributeManager.DrawTrumpSkill(passiveSkillData);
+    }
+    else
+    {
+      drawArray = distributeManager.DrawTrumpSkill(null);
     }
 
-
-    var drawArray = distributeManager.DrawTrumpSkill(passiveSkillData);
-    
      for (int i = 0; i < 5; i++)
     {
       handController.SetHandData(i,drawArray[i]);
@@ -362,6 +474,17 @@ public class GameManager : MonoBehaviour
 
   void ChangePhase()
   {
+    //強制チェンジなら
+    if(isForceChange)
+    {
+      handController.SetSelect(0, true);
+      handController.SetSelect(1, true);
+      handController.SetSelect(2, true);
+      handController.SetSelect(3, true);
+      handController.SetSelect(4, true);
+      handController.SetAllLock(true);
+    }
+
     button.gameObject.SetActive(true);
 
     //スキルビューを有効
@@ -526,13 +649,31 @@ public class GameManager : MonoBehaviour
   {
     var type = handChecker.CheckHand(handController.GetHandData());
 
-    if(type != HandChecker.HandType.NoPair)
+
+    if(type == HandChecker.HandType.OnePair)//ワンペアの場合は初期ベットコインを得て継続できない
     {
-      gamePopupManager.OpenContinuePopup(gameUserData.BetCoin,bonusRate, () =>
+      //初期ベットコインに変えてセーブ
+      gameUserData.BetCoin = firstBet;
+      gameUserData.GetCoinAndSave();
+
+      ContinueCounter = 0;
+      gamePopupManager.OpenConfirmPopup(() =>
+      {
+        gamePhase = GamePhase.Bet;
+        ChangePhase(gamePhase);
+      },
+      () =>
+      {
+        FinishGame();
+      });
+    }
+    else if (type != HandChecker.HandType.NoPair)
+    {
+      gamePopupManager.OpenContinuePopup(gameUserData.BetCoin, bonusRate, () =>
       {
         ContinueCounter++;
         bonusRate = GameCommon.GetBunus(ContinueCounter);
-        gamePhase = GamePhase.Distribute;
+        gamePhase = GamePhase.TrumpInit;
         ChangePhase(gamePhase);
       },
       () =>

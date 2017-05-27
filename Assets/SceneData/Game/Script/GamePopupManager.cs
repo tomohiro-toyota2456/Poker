@@ -20,8 +20,7 @@ public class GamePopupManager : MonoBehaviour
 	// Use this for initialization
 	void Start ()
   {
-    popupManager = PopupManager.Instance;
-		
+    popupManager = PopupManager.Instance;	
 	}
 
   public void OpenBetPopup(long _maxBet,long _minBet,Action<long> _endAction)
