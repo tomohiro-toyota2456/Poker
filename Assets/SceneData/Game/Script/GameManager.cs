@@ -654,7 +654,6 @@ public class GameManager : MonoBehaviour
     {
       //初期ベットコインに変えてセーブ
       gameUserData.BetCoin = firstBet;
-      gameUserData.GetCoinAndSave();
 
       ContinueCounter = 0;
       gamePopupManager.OpenConfirmPopup(() =>
