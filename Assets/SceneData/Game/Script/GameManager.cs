@@ -138,12 +138,10 @@ public class GameManager : MonoBehaviour
       }
       playerSkillView.SetButtonText(0, skill1.SkillName);
 
-      int firstCnt1 = 100;
       Action action = () =>
       {
-        gamePopupManager.OpenSkillDetailPopup(skill1, firstCnt1+ContinueCounter, () =>
+        gamePopupManager.OpenSkillDetailPopup(skill1,ContinueCounter, () =>
           {
-            firstCnt1 = 0;
             UseSkill(skill1,1);
           }, null);
       };
@@ -165,12 +163,10 @@ public class GameManager : MonoBehaviour
       }
 
       playerSkillView.SetButtonText(1, skill2.SkillName);
-      int firstCnt2 = 100;
       Action action = () =>
       {
-        gamePopupManager.OpenSkillDetailPopup(skill2,firstCnt2 + ContinueCounter,() =>
+        gamePopupManager.OpenSkillDetailPopup(skill2,ContinueCounter,() =>
         {
-          firstCnt2 = 0;
           UseSkill(skill2,2);
         }, null);
       };
@@ -195,12 +191,11 @@ public class GameManager : MonoBehaviour
       }
 
       playerSkillView.SetButtonText(2, skill3.SkillName);
-      int firstCnt3 = 100;
+
       Action action = () =>
       {
-        gamePopupManager.OpenSkillDetailPopup(skill3, firstCnt3+ContinueCounter, () =>
+        gamePopupManager.OpenSkillDetailPopup(skill3,ContinueCounter, () =>
         {
-          firstCnt3 = 0;
           UseSkill(skill3,3);
         }, null);
       };
@@ -308,7 +303,7 @@ public class GameManager : MonoBehaviour
         Debug.Log("UseOrder");
 
         break;
-    }
+    }   
   }
 
 
@@ -655,7 +650,7 @@ public class GameManager : MonoBehaviour
   {
     var type = handChecker.CheckHand(handController.GetHandData());
 
-
+    /*
     if(type == HandChecker.HandType.OnePair)//ワンペアの場合は初期ベットコインを得て継続できない
     {
       //初期ベットコインに変えてセーブ
@@ -672,7 +667,8 @@ public class GameManager : MonoBehaviour
         FinishGame();
       });
     }
-    else if (type != HandChecker.HandType.NoPair)
+    */
+    if (type != HandChecker.HandType.NoPair)
     {
       ContinueCounter++;
       bonusRate = magMasterData.GetContinueMag(ContinueCounter);
