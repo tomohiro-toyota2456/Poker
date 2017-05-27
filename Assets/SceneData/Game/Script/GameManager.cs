@@ -670,10 +670,10 @@ public class GameManager : MonoBehaviour
     }
     else if (type != HandChecker.HandType.NoPair)
     {
+      ContinueCounter++;
+      bonusRate = magMasterData.GetContinueMag(ContinueCounter);
       gamePopupManager.OpenContinuePopup(gameUserData.BetCoin, bonusRate, () =>
       {
-        ContinueCounter++;
-        bonusRate = magMasterData.GetContinueMag(ContinueCounter);
         gamePhase = GamePhase.TrumpInit;
         ChangePhase(gamePhase);
       },
