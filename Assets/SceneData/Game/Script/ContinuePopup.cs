@@ -33,7 +33,7 @@ public class ContinuePopup : PopupBase
       .Take(1)
       .Subscribe(_ =>
       {
-        if (_action != null) ;
+        if (_action != null) 
         _action();
 
         Close();
@@ -46,7 +46,7 @@ public class ContinuePopup : PopupBase
       .Take(1)
       .Subscribe(_ =>
       {
-        if (_action != null) ;
+        if (_action != null) 
         _action();
 
         Close();
