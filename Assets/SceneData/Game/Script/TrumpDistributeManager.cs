@@ -108,6 +108,8 @@ public class TrumpDistributeManager
           return DrawThreeCard();
         case HandChecker.HandType.Straight:
           return DrawStraight();
+        case HandChecker.HandType.Flush:
+          return DrawFlush();
         case HandChecker.HandType.FourCard:
           return DrawFourCard();
         case HandChecker.HandType.FullHouse:
