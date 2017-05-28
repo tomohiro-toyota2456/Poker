@@ -392,6 +392,7 @@ public class GameManager : MonoBehaviour
   void BetPhase()
   {
     //仮
+    gameUserData.BetCoin = 0;
     SetViewBetCoin(gameUserData.BetCoin);
     SetViewHaveCoin(gameUserData.HaveCoin);
 
