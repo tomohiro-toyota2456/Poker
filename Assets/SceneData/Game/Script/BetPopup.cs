@@ -17,12 +17,14 @@ public class BetPopup : PopupBase
   Button[] minusButtonArray;
   [SerializeField]
   Button okButton;
+  [SerializeField]
+  Button cancelButton;
 
   long maxBet;
   long bet =0;
   long minBet;
 
-  public void Init(long _maxBet,long _minBet,Action<long> _endAction)
+  public void Init(long _maxBet,long _minBet,Action<long> _endOkAction,Action _endCancelAction)
   {
     maxBet = _maxBet;
     minBet = _minBet;
@@ -78,11 +80,22 @@ public class BetPopup : PopupBase
       .Take(1)
       .Subscribe(_ =>
       {
-        if(_endAction != null)
+        if(_endOkAction != null)
         {
-          _endAction(bet);
+          _endOkAction(bet);
         }
 
+        Close();
+      }).AddTo(gameObject);
+
+    cancelButton.OnClickAsObservable()
+      .Take(1)
+      .Subscribe(_ =>
+      {
+        if(_endCancelAction != null)
+        {
+          _endCancelAction();
+        }
         Close();
       }).AddTo(gameObject);
   }

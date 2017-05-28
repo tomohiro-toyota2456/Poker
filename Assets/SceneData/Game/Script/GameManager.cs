@@ -392,6 +392,9 @@ public class GameManager : MonoBehaviour
   void BetPhase()
   {
     //仮
+    SetViewBetCoin(gameUserData.BetCoin);
+    SetViewHaveCoin(gameUserData.HaveCoin);
+
     gameUserData.UseSkill(0);
     playerSkillView.SetButtonInteractable(0, true);
     gameUserData.UseSkill(1);
@@ -400,36 +403,25 @@ public class GameManager : MonoBehaviour
     playerSkillView.SetButtonInteractable(2, true);
     playerSkillView.SetButtonInteractable(3, true);
 
-
-    StartCoroutine(Bet());
-  }
-
-  IEnumerator Bet()
-  {
-    bool isBet = true;
-
     gamePopupManager.OpenBetPopup(gameUserData.HaveCoin, 100, (val) =>
     {
       bet = val;
-      isBet = false;
-    });
 
+      //この時点でベット確定し、セーブ
+      //ベットコイン決定
+      gameUserData.BetCoin = bet;
+      firstBet = bet;
+      //セーブ
+      gameUserData.UseCoinAndSave();
 
-    while(isBet)
+      gamePhase = GamePhase.TrumpInit;
+      ChangePhase(gamePhase);
+
+    },
+    ()=>
     {
-      yield return null;
-    }
-
-    //この時点でベット確定し、セーブ
-    //ベットコイン決定
-    gameUserData.BetCoin = bet;
-    firstBet = bet;
-    //セーブ
-    gameUserData.UseCoinAndSave();
-
-    gamePhase = GamePhase.TrumpInit;
-    ChangePhase(gamePhase);
-
+      SceneChanger.Instance.ChangeScene("Home");
+    });
   }
 
   void TrumpInitPhase()
@@ -639,9 +631,12 @@ public class GameManager : MonoBehaviour
     float magnificationSum = (GameCommon.GetHandScale(type) + bonusVal) * magnification;
     gameUserData.BetCoin = (long)(gameUserData.BetCoin * magnificationSum);
 
+    //コインの数がMaxの場合
     if(gameUserData.BetCoin >= GameCommon.maxBet)
+    {
+      gameUserData.BetCoin = GameCommon.maxBet;
+    }
 
-    Debug.Log(type);
     yield return new WaitForSeconds(2.5f);
 
     //確認ボタン機能
@@ -676,7 +671,11 @@ public class GameManager : MonoBehaviour
       //未クリアなので借金を返すように促す
       if (haveMoney < 0)
       {
-        gamePopupManager.OpenHaveCoinMaxPopup(false, () => FinishGame());
+        gamePopupManager.OpenHaveCoinMaxPopup(false, () =>
+        {
+          gameUserData.GetCoinAndSave();
+          SceneChanger.Instance.ChangeScene("Home");   
+        });
       }
       else
       {
@@ -685,7 +684,12 @@ public class GameManager : MonoBehaviour
     }
     else if (haveCoin < 100 && gameUserData.BetCoin == 0)//コイン不足 かつ負けている
     {
-      gamePopupManager.OpenNoMoneyContinuePopup(null, () => FinishGame());
+      //セーブして終了
+      gamePopupManager.OpenNoMoneyContinuePopup(null, () =>
+      {
+        gameUserData.GetCoinAndSave();
+        SceneChanger.Instance.ChangeScene("Home");
+      });
     }
     else
     {
@@ -731,23 +735,17 @@ public class GameManager : MonoBehaviour
     }
     else
     {
-      ContinueCounter = 0;
-      gamePopupManager.OpenConfirmPopup(()=>
-      {
-        gamePhase = GamePhase.Bet;
-        ChangePhase(gamePhase);
-      },
-      ()=>
-      {
-        FinishGame();
-      });
+      //外したときは一旦セーブしてベット画面に戻る
+      FinishGame();
     }
   }
 
   void FinishGame()
   {
+    ContinueCounter = 0;
     gameUserData.GetCoinAndSave();
-    SceneChanger.Instance.ChangeScene("Home");
+    gamePhase = GamePhase.Bet;
+    ChangePhase(gamePhase);
   }
 
 }
