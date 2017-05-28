@@ -23,10 +23,10 @@ public class GamePopupManager : MonoBehaviour
     popupManager = PopupManager.Instance;	
 	}
 
-  public void OpenBetPopup(long _maxBet,long _minBet,Action<long> _endOkAction,Action _endCancelAction)
+  public void OpenBetPopup(long _maxBet,long _minBet,long _curBet,Action<long> _endOkAction,Action _endCancelAction)
   {
     var pp = popupManager.Create<BetPopup>(betPopup);
-    pp.Init(_maxBet, _minBet, _endOkAction,_endCancelAction);
+    pp.Init(_maxBet, _minBet,_curBet, _endOkAction,_endCancelAction);
     popupManager.OpenPopup(pp,null);
   }
 

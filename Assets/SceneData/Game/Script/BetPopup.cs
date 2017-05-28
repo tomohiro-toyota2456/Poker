@@ -24,12 +24,23 @@ public class BetPopup : PopupBase
   long bet =0;
   long minBet;
 
-  public void Init(long _maxBet,long _minBet,Action<long> _endOkAction,Action _endCancelAction)
+  public void Init(long _maxBet,long _minBet,long _curBet,Action<long> _endOkAction,Action _endCancelAction)
   {
     maxBet = _maxBet;
     minBet = _minBet;
 
-    bet = _minBet;
+    bet = _curBet;
+
+    if(_curBet >= maxBet)
+    {
+      bet = maxBet;
+    }
+
+    if(_curBet <= minBet)
+    {
+      bet = minBet;
+    }
+
     numberObject.SetNumber(bet,true);
 
     long plus = 10;

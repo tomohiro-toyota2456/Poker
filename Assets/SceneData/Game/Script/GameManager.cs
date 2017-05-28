@@ -404,7 +404,7 @@ public class GameManager : MonoBehaviour
     playerSkillView.SetButtonInteractable(2, true);
     playerSkillView.SetButtonInteractable(3, true);
 
-    gamePopupManager.OpenBetPopup(gameUserData.HaveCoin, 100, (val) =>
+    gamePopupManager.OpenBetPopup(gameUserData.HaveCoin, 100,firstBet, (val) =>
     {
       bet = val;
 
