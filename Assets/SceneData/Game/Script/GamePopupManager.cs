@@ -66,7 +66,9 @@ public class GamePopupManager : MonoBehaviour
       pp.Init(SimplePopup.PopupType.Close, "警告", dist);
     }
 
-    popupManager.OpenPopup(pp,_closeAction);
+    pp.AddCloseEndAction(_closeAction);
+
+    popupManager.OpenPopup(pp,null);
   }
 
   public void OpenNoMoneyContinuePopup(Action _yesAction, Action _noAction)

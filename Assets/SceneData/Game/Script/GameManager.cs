@@ -666,7 +666,7 @@ public class GameManager : MonoBehaviour
   void ContinuePhase()
   {
     //所持金Max処理
-    long haveCoin = gameUserData.HaveCoin;
+    long haveCoin = gameUserData.HaveCoin + gameUserData.BetCoin;
     long haveMoney = -1000;
 
     if (haveCoin >= GameCommon.maxCoin)

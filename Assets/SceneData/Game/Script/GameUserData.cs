@@ -72,6 +72,12 @@ public struct GameUserData
   {
     //現在のベット数から所持コインを足して
     haveCoin = haveCoin + betCoin;
+
+    if(haveCoin >= GameCommon.maxCoin)
+    {
+      haveCoin = GameCommon.maxCoin;
+    }
+
     userDB.SetCoin(haveCoin);
     userDB.SaveHaveCoin();
   }
