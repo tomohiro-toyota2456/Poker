@@ -204,6 +204,36 @@ public class GameManager : MonoBehaviour
 
     }
 
+    var skill4 = masterSkillDB.GetData(gameUserData.UserSkillSlot.skillSlot4);
+
+
+    if (skill4 == null)
+    {
+      playerSkillView.SetButtonText(3, "Empty");
+      playerSkillView.SetButtonInteractable(3, false);
+    }
+    else
+    {
+      if (skill4.Type == SkillData.SkillType.Passive)
+      {
+        passiveSkillData = skill4;
+      }
+
+      playerSkillView.SetButtonText(3, skill4.SkillName);
+
+      Action action = () =>
+      {
+        gamePopupManager.OpenSkillDetailPopup(skill4, ContinueCounter, () =>
+        {
+          UseSkill(skill4, 4);
+        }, null);
+      };
+
+      playerSkillView.SetButtonAction(3, action);
+
+    }
+
+
   }
 
   public void UseSkill(SkillData _skillData,int _useSlot)
@@ -368,6 +398,7 @@ public class GameManager : MonoBehaviour
     playerSkillView.SetButtonInteractable(1, true);
     gameUserData.UseSkill(2);
     playerSkillView.SetButtonInteractable(2, true);
+    playerSkillView.SetButtonInteractable(3, true);
 
 
     StartCoroutine(Bet());

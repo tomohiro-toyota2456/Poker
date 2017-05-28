@@ -30,6 +30,7 @@ public class UserDB : DataBase
     public string skillSlot1;
     public string skillSlot2;
     public string skillSlot3;
+    public string skillSlot4;
   }
 
   public bool IsExistData()
@@ -71,6 +72,7 @@ public class UserDB : DataBase
       slot.skillSlot1 = "s00001";
       slot.skillSlot2 = "s00002";
       slot.skillSlot3 = "s00003";
+      slot.skillSlot4 = "";
 
       userData.skillSlot = slot;
     }

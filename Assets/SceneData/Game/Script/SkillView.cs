@@ -11,9 +11,9 @@ using UniRx.Triggers;
 public class SkillView : MonoBehaviour
 {
   [SerializeField]
-  Button[] skillSlotArray = new Button[3];
+  Button[] skillSlotArray = new Button[4];
   [SerializeField]
-  TextMeshProUGUI[] skillNameArray = new TextMeshProUGUI[3];//ボタンの表示テキスト
+  TextMeshProUGUI[] skillNameArray = new TextMeshProUGUI[4];//ボタンの表示テキスト
   [SerializeField]
   Image bg;
 
@@ -34,7 +34,7 @@ public class SkillView : MonoBehaviour
   //スキルの表示制御
   public void SetActiveSkillView(bool _flag)
   {
-    for(int i = 0; i < 3; i ++)
+    for(int i = 0; i < 4; i ++)
     {
       skillSlotArray[i].gameObject.SetActive(_flag);
       skillNameArray[i].gameObject.SetActive(_flag);
