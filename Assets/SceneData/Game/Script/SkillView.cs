@@ -16,6 +16,8 @@ public class SkillView : MonoBehaviour
   TextMeshProUGUI[] skillNameArray = new TextMeshProUGUI[4];//ボタンの表示テキスト
   [SerializeField]
   Image bg;
+  [SerializeField]
+  GameObject[] keepOutObjArray = new GameObject[4];
 
   public void SetButtonText(int _idx,string _text)
   {
@@ -47,6 +49,12 @@ public class SkillView : MonoBehaviour
   public void SetButtonInteractable(int _idx,bool _flag)
   {
     skillSlotArray[_idx].interactable = _flag;
+  }
+
+  //ボタンを覆うカバーを付けるかどうか
+  public void SetButtonKeepOut(int _idx,bool _flag)
+  {
+    keepOutObjArray[_idx].SetActive(_flag);
   }
 
 }

@@ -30,10 +30,18 @@ public class GamePopupManager : MonoBehaviour
     popupManager.OpenPopup(pp,null);
   }
 
-  public void OpenContinuePopup(long _getCoin,float _bonus,Action _yesAction,Action _noAction)
+  public void OpenContinuePopup(long _getCoin,float _bonus,Action _yesAction,Action _noAction,bool _isforceContinue)
   {
     var pp = popupManager.Create<ContinuePopup>(continuePopup);
-    pp.Init(_getCoin, _bonus, _yesAction, _noAction);
+
+    if (_isforceContinue)
+    {
+      pp.InitRestriction(_getCoin, _bonus, _yesAction);
+    }
+    else
+    {
+      pp.Init(_getCoin, _bonus, _yesAction, _noAction);
+    }
     popupManager.OpenPopup(pp, null);
   }
 

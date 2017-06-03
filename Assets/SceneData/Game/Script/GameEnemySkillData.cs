@@ -17,6 +17,13 @@ public class GameEnemySkillData
     skillData[_idx] = _data;
   }
 
+  public void Reset()
+  {
+    coolTime = 1;
+    coolTimeCnt = 0;
+    useSkillCount = 0;
+  }
+
   public EnemySkillData UseSkill()
   {
     if (coolTimeCnt < coolTime)
@@ -29,7 +36,7 @@ public class GameEnemySkillData
     useSkillCount++;
 
     coolTimeCnt = 0;
-    coolTime = Random.Range(3, 6);
+    coolTime = Random.Range(1, 1);
 
     return skillData[idx];
   }

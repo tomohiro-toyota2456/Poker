@@ -31,6 +31,16 @@ public class GameManager : MonoBehaviour
   TextMeshProUGUI betCoinText;
   [SerializeField]
   ContinueMagMasterData magMasterData;
+  [SerializeField]
+  GameObject particleObj;
+  [SerializeField]
+  SkillCutIn userSkillCutIn;
+  [SerializeField]
+  SkillCutIn enemySkillCutIn;
+  [SerializeField]
+  GameObject blockSheet;
+  [SerializeField]
+  GameObject keepOutObj;
 
   HandChecker handChecker;　
   TrumpDistributeManager distributeManager;//配る用スクリプト
@@ -89,7 +99,6 @@ public class GameManager : MonoBehaviour
     button.gameObject.SetActive(false);
 
     SetSkill();
-    SetEnemySkill();
     playerSkillView.SetActiveSkillView(false);
     //最初のフェーズへ
     ChangePhase(gamePhase);
@@ -293,14 +302,30 @@ public class GameManager : MonoBehaviour
         break;
     }
 
-    gameUserData.UseSkill(_useSlot);
     playerSkillView.SetButtonInteractable(_useSlot - 1, false);
+
+    //スキルカットイン中は画面操作できないようにする。
+    blockSheet.SetActive(true);
+    userSkillCutIn.Init(skillData.SkillName, "",null);
+    userSkillCutIn.StartInAnimation(0.5f, () =>
+    {
+      userSkillCutIn.StartOutAnimation(2f, 0.5f, ()
+          =>
+        {
+          blockSheet.SetActive(false);
+        });
+    });
+
   }
 
   public void UseEnemySkill(EnemySkillData _skillData)
   {
     if (_skillData == null)
+    {
+      gamePhase = GamePhase.Distribute;
+      ChangePhase(gamePhase);
       return;
+    }
 
     switch (_skillData.SType)
     {
@@ -312,10 +337,76 @@ public class GameManager : MonoBehaviour
             isEnablePassiveSkill = false;
             break;
           case SkillData.SkillType.ProbabilityUp:
-            isEnableProbablityUpSkill = false;
+            var slot = gameUserData.UserSkillSlot;
+
+            if(!string.IsNullOrEmpty(slot.skillSlot1))
+            {
+              if (masterSkillDB.GetData(slot.skillSlot1).Type == SkillData.SkillType.ProbabilityUp)
+              {
+                playerSkillView.SetButtonKeepOut(0, true);
+              }
+            }
+
+            if (!string.IsNullOrEmpty(slot.skillSlot2))
+            {
+              if (masterSkillDB.GetData(slot.skillSlot2).Type == SkillData.SkillType.ProbabilityUp)
+              {
+                playerSkillView.SetButtonKeepOut(1, true);
+              }
+            }
+
+            if (!string.IsNullOrEmpty(slot.skillSlot3))
+            {
+              if (masterSkillDB.GetData(slot.skillSlot3).Type == SkillData.SkillType.ProbabilityUp)
+              {
+                playerSkillView.SetButtonKeepOut(2, true);
+              }
+            }
+
+            if (!string.IsNullOrEmpty(slot.skillSlot4))
+            {
+              if (masterSkillDB.GetData(slot.skillSlot4).Type == SkillData.SkillType.ProbabilityUp)
+              {
+                playerSkillView.SetButtonKeepOut(3, true);
+              }
+            }
+
             break;
           case SkillData.SkillType.Magnification:
-            isEnanleMagnificationSkill = false;
+            var slot2 = gameUserData.UserSkillSlot;
+
+            if (!string.IsNullOrEmpty(slot2.skillSlot1))
+            {
+              if (masterSkillDB.GetData(slot2.skillSlot1).Type == SkillData.SkillType.Magnification)
+              {
+                playerSkillView.SetButtonKeepOut(0, true);
+              }
+            }
+
+            if (!string.IsNullOrEmpty(slot2.skillSlot2))
+            {
+              if (masterSkillDB.GetData(slot2.skillSlot2).Type == SkillData.SkillType.Magnification)
+              {
+                playerSkillView.SetButtonKeepOut(1, true);
+              }
+            }
+
+            if (!string.IsNullOrEmpty(slot2.skillSlot3))
+            {
+              if (masterSkillDB.GetData(slot2.skillSlot3).Type == SkillData.SkillType.Magnification)
+              {
+                playerSkillView.SetButtonKeepOut(2, true);
+              }
+            }
+
+            if (!string.IsNullOrEmpty(slot2.skillSlot4))
+            {
+              if (masterSkillDB.GetData(slot2.skillSlot4).Type == SkillData.SkillType.Magnification)
+              {
+                playerSkillView.SetButtonKeepOut(3, true);
+              }
+            }
+
             break;
         }
 
@@ -337,6 +428,19 @@ public class GameManager : MonoBehaviour
 
         break;
     }
+
+    //スキルカットイン中は画面操作できないようにする。
+    blockSheet.SetActive(true);
+    enemySkillCutIn.Init(_skillData.SkillName, _skillData.Dist, null);
+    enemySkillCutIn.StartInAnimation(0.5f, () =>
+     {
+       enemySkillCutIn.StartOutAnimation(1.5f,0.5f,() =>
+       {
+         blockSheet.SetActive(false);
+         gamePhase = GamePhase.Distribute;
+         ChangePhase(gamePhase);
+       });
+     });
        
   }
 
@@ -396,13 +500,19 @@ public class GameManager : MonoBehaviour
     SetViewBetCoin(gameUserData.BetCoin);
     SetViewHaveCoin(gameUserData.HaveCoin);
 
-    gameUserData.UseSkill(0);
     playerSkillView.SetButtonInteractable(0, true);
-    gameUserData.UseSkill(1);
     playerSkillView.SetButtonInteractable(1, true);
-    gameUserData.UseSkill(2);
     playerSkillView.SetButtonInteractable(2, true);
     playerSkillView.SetButtonInteractable(3, true);
+
+    playerSkillView.SetButtonKeepOut(0, false);
+    playerSkillView.SetButtonKeepOut(1, false);
+    playerSkillView.SetButtonKeepOut(2, false);
+    playerSkillView.SetButtonKeepOut(3, false);
+
+    gameEnemySkillData.Reset();
+    SetEnemySkill();
+
 
     gamePopupManager.OpenBetPopup(gameUserData.HaveCoin, 100,firstBet, (val) =>
     {
@@ -431,10 +541,15 @@ public class GameManager : MonoBehaviour
     isEnablePassiveSkill = true;
     isEnanleMagnificationSkill = true;
     isEnableProbablityUpSkill = true;
-
     magnification = 1;
     isForceContinue = false;
     isForceChange = false;
+    keepOutObj.SetActive(false);
+
+    playerSkillView.SetButtonKeepOut(0, false);
+    playerSkillView.SetButtonKeepOut(1, false);
+    playerSkillView.SetButtonKeepOut(2, false);
+    playerSkillView.SetButtonKeepOut(3, false);
 
     distributeManager.InitTrumpList();
     for (int i = 0; i < 5; i++)
@@ -461,14 +576,10 @@ public class GameManager : MonoBehaviour
 
   void EnemySkillPhase()
   {
-   // var skill =  gameEnemySkillData.UseSkill();
+    var skill =  gameEnemySkillData.UseSkill();
+    gameEnemySkillData.AddCoolTimeCnt();
+    UseEnemySkill(skill);
 
- //   UseEnemySkill(skill);
-
-   // gameEnemySkillData.AddCoolTimeCnt();
-
-    gamePhase = GamePhase.Distribute;
-    ChangePhase(gamePhase);
   }
 
   void DistributePhase()
@@ -479,6 +590,8 @@ public class GameManager : MonoBehaviour
   IEnumerator Distribute()
   {
     HandChecker.TrumpData[] drawArray = null;
+
+    //パッシブスキルが有効の場合はスキル使用
     if (isEnablePassiveSkill)
     {
       drawArray = distributeManager.DrawTrumpSkill(passiveSkillData);
@@ -491,9 +604,6 @@ public class GameManager : MonoBehaviour
      for (int i = 0; i < 5; i++)
     {
       handController.SetHandData(i,drawArray[i]);
-
-      //Debug
-      Debug.Log(i.ToString() + ":" + drawArray[i].mark + "," + drawArray[i].number);
 
       handController.Move(true, i, cardMoveTime, null);
       yield return new WaitForSeconds(cardMoveTime);
@@ -515,6 +625,7 @@ public class GameManager : MonoBehaviour
     //強制チェンジなら
     if(isForceChange)
     {
+      keepOutObj.SetActive(true);
       handController.SetSelect(0, true);
       handController.SetSelect(1, true);
       handController.SetSelect(2, true);
@@ -558,6 +669,9 @@ public class GameManager : MonoBehaviour
 
   void SecondDistributePhase()
   {
+    //制限シートは戻す
+    keepOutObj.SetActive(false);
+
     StartCoroutine(SecondDistribute());
   }
 
@@ -702,24 +816,6 @@ public class GameManager : MonoBehaviour
   {
     var type = handChecker.CheckHand(handController.GetHandData());
 
-    /*
-    if(type == HandChecker.HandType.OnePair)//ワンペアの場合は初期ベットコインを得て継続できない
-    {
-      //初期ベットコインに変えてセーブ
-      gameUserData.BetCoin = firstBet;
-      ContinueCounter = 0;
-      gamePopupManager.OpenConfirmPopup(() =>
-      {
-        gameUserData.GetCoinAndSave();
-        gamePhase = GamePhase.Bet;
-        ChangePhase(gamePhase);
-      },
-      () =>
-      {
-        FinishGame();
-      });
-    }
-    */
     if (type != HandChecker.HandType.NoPair)
     {
       ContinueCounter++;
@@ -732,7 +828,7 @@ public class GameManager : MonoBehaviour
       () =>
       {
         FinishGame();
-      });
+      },isForceContinue);
     }
     else
     {

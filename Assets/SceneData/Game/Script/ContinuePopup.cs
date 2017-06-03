@@ -18,6 +18,8 @@ public class ContinuePopup : PopupBase
   Button yesButton;
   [SerializeField]
   Button noButton;
+  [SerializeField]
+  GameObject keepOutObj;
 
   public void Init(long _getCoin,float _bonusVal,Action _yesAction,Action _noAction)
   {
@@ -25,6 +27,16 @@ public class ContinuePopup : PopupBase
     SetYesButtonAction(_yesAction);
     SetNoButtonAction(_noAction);
     SetBonusText(_bonusVal);
+  }
+
+  //制限付き　拒否が選べない場合
+  public void InitRestriction(long _getCoin, float _bonusVal, Action _yesAction)
+  {
+    numberObject.SetNumber(_getCoin);
+    SetYesButtonAction(_yesAction);
+    SetBonusText(_bonusVal);
+    keepOutObj.SetActive(true);
+    noButton.interactable = false;
   }
 
   void SetYesButtonAction(Action _action)

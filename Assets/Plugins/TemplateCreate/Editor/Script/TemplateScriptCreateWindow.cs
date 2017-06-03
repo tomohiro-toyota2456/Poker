@@ -37,6 +37,9 @@ public class TemplateScriptCreateWindow : EditorWindow
       serializedObject = new SerializedObject(config);
     }
 
+    if (serializedObject != null)
+      serializedObject.Update();
+
     using (new EditorGUILayout.VerticalScope())
     {
       EditorGUILayout.LabelField("保存パス(ファイル名はいらない)");
@@ -265,7 +268,7 @@ public class TemplateScriptCreateWindow : EditorWindow
 
       TextInfo info2 = CultureInfo.CurrentCulture.TextInfo;
       string propertyName = info2.ToTitleCase(name);
-      propertyBuilder.Append(space + moldName + arrayStr + " " + propertyName + "{get{ return " + name + "; }set{ " + name + " = value; }}");
+      propertyBuilder.Append(space + "public "+moldName + arrayStr + " " + propertyName + "{get{ return " + name + "; }set{ " + name + " = value; }}");
       propertyBuilder.AppendLine();
     }
 
