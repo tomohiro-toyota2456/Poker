@@ -694,7 +694,6 @@ public class GameManager : MonoBehaviour
         int idx = idxArray[i];
         handController.SetHandData(idx, distributeManager.DrawTrump());
         handController.Move(true, idx, cardMoveTime, null);
-        Debug.Log(i);
         yield return new WaitForSeconds(cardMoveTime);
       }
 

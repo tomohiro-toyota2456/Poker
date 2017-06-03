@@ -19,7 +19,7 @@ public class GameEnemySkillData
 
   public void Reset()
   {
-    coolTime = 1;
+    coolTime = coolTime = Random.Range(3, 6);
     coolTimeCnt = 0;
     useSkillCount = 0;
   }
@@ -36,7 +36,7 @@ public class GameEnemySkillData
     useSkillCount++;
 
     coolTimeCnt = 0;
-    coolTime = Random.Range(1, 1);
+    coolTime = Random.Range(3, 6);
 
     return skillData[idx];
   }
