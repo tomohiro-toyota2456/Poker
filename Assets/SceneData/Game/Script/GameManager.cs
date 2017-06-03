@@ -77,6 +77,7 @@ public class GameManager : MonoBehaviour
 
   GamePhase gamePhase = GamePhase.Bet;
   SkillData skillData;
+  EnemySkillData eSkillData;
   SkillData passiveSkillData = null;
 
 	// Use this for initialization
@@ -262,7 +263,7 @@ public class GameManager : MonoBehaviour
         break;
 
       case SkillData.SkillType.Magnification:
-        magnification = skillData.Effect;
+        SetMag(skillData.Effect);
         handController.SetSelect(0, true);
         handController.SetSelect(1, true);
         handController.SetSelect(2, true);
@@ -326,6 +327,8 @@ public class GameManager : MonoBehaviour
       ChangePhase(gamePhase);
       return;
     }
+
+    eSkillData = _skillData;
 
     switch (_skillData.SType)
     {
@@ -421,6 +424,7 @@ public class GameManager : MonoBehaviour
         break;
       case EnemySkillData.EnemySkillType.ForceAllChange:
         Debug.Log("AllChange");
+        SetMag(_skillData.Effect);
         isForceChange = true;
         break;
       case EnemySkillData.EnemySkillType.Order:
@@ -741,6 +745,34 @@ public class GameManager : MonoBehaviour
     handImageView.InAnimationScl(0.5f, null);
     
     //役が成立していればボーナス値も適用する
+
+    if(eSkillData != null && eSkillData.SType == EnemySkillData.EnemySkillType.Order)
+    {
+      switch(eSkillData.OType)
+      {
+        case EnemySkillData.OrderType.Hand:
+
+          if(type == eSkillData.HType)
+          {
+            SetMag(eSkillData.Effect);
+          }
+
+          break;
+
+        case EnemySkillData.OrderType.Color:
+
+          if(handChecker.CheckOrderMark(GameCommon.ConvertMarkFromColor(eSkillData.CType),handController.GetHandData()))
+          {
+            if (eSkillData.Effect > magnification)
+            {
+              SetMag(eSkillData.Effect);
+            }
+          }
+
+          break;
+      }
+    }
+
     float bonusVal = type != HandChecker.HandType.NoPair ? bonusRate : ContinueCounter = 0;
     float magnificationSum = (GameCommon.GetHandScale(type) + bonusVal) * magnification;
     gameUserData.BetCoin = (long)(gameUserData.BetCoin * magnificationSum);
@@ -842,6 +874,14 @@ public class GameManager : MonoBehaviour
     gameUserData.GetCoinAndSave();
     gamePhase = GamePhase.Bet;
     ChangePhase(gamePhase);
+  }
+
+  void SetMag(float _val)
+  {
+    if(_val > magnification)
+    {
+      magnification = _val;
+    }
   }
 
 }
