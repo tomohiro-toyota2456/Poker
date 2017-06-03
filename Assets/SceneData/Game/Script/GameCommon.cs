@@ -9,6 +9,7 @@ using UnityEngine;
   static public readonly int skillSlot = 3;
   static public readonly long maxBet = 5000000000;
   static public readonly int maxItem = 99;
+  static public readonly int LoginBonus = 500;
 
   static public float GetHandScale(HandChecker.HandType _type)
   {

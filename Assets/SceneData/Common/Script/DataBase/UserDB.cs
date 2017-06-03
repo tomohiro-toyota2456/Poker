@@ -69,6 +69,8 @@ public class UserDB : DataBase
 
     //ストアへのログインはデータ作成時は空っぽにしておく
     userData.loginStore = PlayerPrefs.GetString(loginStoreKey, "");
+    //前回ログイン
+    userData.loginDate = PlayerPrefs.GetString(loginDateKey, "");
 
 
     string json = PlayerPrefs.GetString(skillSlotDataKey, "");
@@ -113,6 +115,16 @@ public class UserDB : DataBase
   public void SetCoin(long _coin)
   {
     userData.haveCoin = _coin;
+  }
+
+  public void CalcCoin(long _val)
+  {
+    userData.haveCoin += _val;
+  }
+
+  public void CalcMoney(long _val)
+  {
+    userData.haveMoney += _val;
   }
 
   public SkillSlot GetSkillSlot()
