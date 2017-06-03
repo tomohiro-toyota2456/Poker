@@ -4,6 +4,9 @@ using UnityEngine;
 using Common;
 using TMPro;
 using Common.DataBase;
+using UnityEngine.UI;
+using UniRx;
+using UniRx.Triggers;
 
 public class HomeManager : MonoBehaviour
 {
@@ -11,12 +14,18 @@ public class HomeManager : MonoBehaviour
   TextMeshProUGUI haveCoin;
   [SerializeField]
   TextMeshProUGUI haveMoney;
+  [SerializeField]
+  OptionPopup optionPopup;
+  [SerializeField]
+  Button optionButton;
 
   UserDB userDB;
+  PopupManager ppManager;
 	// Use this for initialization
 	void Start ()
   {
     userDB = DataBaseManager.Instance.GetDataBase<UserDB>();
+    ppManager = PopupManager.Instance;
 
     long coin = userDB.GetCoin();
     long money = userDB.GetMoney();
@@ -24,11 +33,19 @@ public class HomeManager : MonoBehaviour
     haveCoin.text = coin.ToString()+"枚";
     haveMoney.text = money.ToString()+"円";
     SceneChanger.Instance.IsInitialize = true;
+
+    optionButton.OnClickAsObservable()
+      .Subscribe(_ =>
+      {
+        OpenOptionPopup();
+      }).AddTo(gameObject);
+
 	}
-	
-	// Update is called once per frame
-	void Update ()
+
+  public void OpenOptionPopup()
   {
-		
-	}
+    var pp = ppManager.Create<OptionPopup>(optionPopup);
+    pp.Init(userDB);
+    ppManager.OpenPopup(pp,null);
+  }
 }

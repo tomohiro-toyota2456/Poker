@@ -15,6 +15,8 @@ public class UserDB : DataBase
   string haveCoinKey = "200ujwwfnwpdnq-02-[-";
   string loginDateKey = "ojfwopfpwqofmqfo2-213";
   string loginStoreKey = "u0u-3dj-9[3r32hjr[2";
+  string seKey = "ki00j0kwjq[3021.12";
+  string bgmKey = "2wfwqfq-m2[[b";
 
   public struct UserData
   {
@@ -23,6 +25,8 @@ public class UserDB : DataBase
     public string loginDate;
     public string loginStore;
     public SkillSlot skillSlot;
+    public float bgmVol;
+    public float seVol;
   }
 
   public struct SkillSlot
@@ -57,6 +61,10 @@ public class UserDB : DataBase
       haveCoinStr = "10000";
     }
 
+    //音量
+    userData.bgmVol = PlayerPrefs.GetFloat(seKey, 0.5f);
+    userData.seVol = PlayerPrefs.GetFloat(bgmKey, 0.5f);
+
     userData.haveCoin = long.Parse(haveCoinStr);
 
     //ストアへのログインはデータ作成時は空っぽにしておく
@@ -80,6 +88,7 @@ public class UserDB : DataBase
     {
       userData.skillSlot = JsonUtility.FromJson<SkillSlot>(json);
     }
+
 
     isExistData = 1;
     PlayerPrefs.SetInt(isExsistDataKey,1);
@@ -136,6 +145,26 @@ public class UserDB : DataBase
     return userData.loginStore;
   }
 
+  public void SetSeVol(float _vol)
+  {
+    userData.seVol = _vol;
+  }
+
+  public float GetSeVol()
+  {
+    return userData.seVol;
+  }
+
+  public void SetBgmVol(float _vol)
+  {
+    userData.bgmVol = _vol;
+  }
+
+  public float GetBgmVol()
+  {
+    return userData.bgmVol;
+  }
+
   public void SaveHaveMoney()
   {
     PlayerPrefs.SetString(haveMoneyKey, userData.haveMoney.ToString());
@@ -162,6 +191,16 @@ public class UserDB : DataBase
     PlayerPrefs.SetString(loginStoreKey, userData.loginStore);
   }
 
+  public void SaveSeVol()
+  {
+    PlayerPrefs.SetFloat(seKey, userData.seVol);
+  }
+
+  public void SaveBgmVol()
+  {
+    PlayerPrefs.SetFloat(bgmKey, userData.bgmVol);
+  }
+
   public void AllSave()
   {
     SaveHaveCoin();
@@ -169,6 +208,8 @@ public class UserDB : DataBase
     SaveLoginDate();
     SaveLoginStore();
     SaveSkillSlot();
+    SaveBgmVol();
+    SaveSeVol();
   }
 
   public void DeleteUserData()

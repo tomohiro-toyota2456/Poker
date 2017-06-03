@@ -712,7 +712,6 @@ public class GameManager : MonoBehaviour
       {
         int idx = idxArray[i];
         handController.Move(true, idx, cardMoveTime, null);
-        Debug.Log(i);
         yield return new WaitForSeconds(cardMoveTime);
       }
 
