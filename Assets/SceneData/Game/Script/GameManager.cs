@@ -260,6 +260,7 @@ public class GameManager : MonoBehaviour
         handController.SetSelect(3, true);
         handController.SetSelect(4, true);
         handController.SetAllLock(true);
+        keepOutObj.SetActive(true);
         break;
 
       case SkillData.SkillType.Magnification:
@@ -270,6 +271,7 @@ public class GameManager : MonoBehaviour
         handController.SetSelect(3, true);
         handController.SetSelect(4, true);
         handController.SetAllLock(true);
+        keepOutObj.SetActive(true);
         break;
       case SkillData.SkillType.Bet:
 
@@ -294,7 +296,7 @@ public class GameManager : MonoBehaviour
         handController.SetSelect(3, true);
         handController.SetSelect(4, true);
         handController.SetAllLock(true);
-
+        keepOutObj.SetActive(true);
         gameUserData.AddBetAndSave(gameUserData.HaveCoin);
 
         SetViewHaveCoin(gameUserData.HaveCoin);
