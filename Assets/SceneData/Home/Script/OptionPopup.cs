@@ -48,6 +48,8 @@ public class OptionPopup : PopupBase
         userDB.SetBgmVol(bgmVol);
         userDB.SaveSeVol();
         userDB.SaveBgmVol();
+        SoundManager.Instance.SeVol = seVol;
+        SoundManager.Instance.BgmVol = bgmVol;
         Close();
       }).AddTo(gameObject);
   }

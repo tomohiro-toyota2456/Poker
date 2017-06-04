@@ -50,6 +50,8 @@
         userDB.LoadUserData();
         haveSkillDB.Load();
         haveItemDB.LoadData();
+        SoundManager.Instance.SeVol = userDB.GetSeVol();
+        SoundManager.Instance.BgmVol = userDB.GetBgmVol();
         SceneChanger.Instance.ChangeScene("Home");
       }
       else
@@ -57,6 +59,10 @@
         userDB.LoadUserData();
         haveSkillDB.Load();
         haveItemDB.LoadData();
+
+        SoundManager.Instance.SeVol = userDB.GetSeVol();
+        SoundManager.Instance.BgmVol = userDB.GetBgmVol();
+
         //ほんとは導入シーンへ
         SceneChanger.Instance.ChangeScene("Home");
       }
