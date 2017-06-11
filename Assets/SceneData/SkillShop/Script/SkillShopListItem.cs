@@ -20,11 +20,13 @@ public class SkillShopListItem : MonoBehaviour
   Button buyButton;
   [SerializeField]
   SkillBuyConfirmPopup skillBuyConfirmPopup;
+  [SerializeField]
+  GameObject passiveObj;
 
   static HaveSkillDB haveSkillDB;
   static UserDB userDB;
 
-  public void Init(string _skillId,string _skillName,string  _skillDist,int _skillCoolTime,int _value)
+  public void Init(string _skillId,string _skillName,string  _skillDist,int _skillCoolTime,SkillData.SkillType _skillType,int _value)
   {
     if (haveSkillDB == null)
     {
@@ -34,6 +36,11 @@ public class SkillShopListItem : MonoBehaviour
     if (userDB == null)
     {
       userDB = DataBaseManager.Instance.GetDataBase<UserDB>();
+    }
+
+    if(_skillType == SkillData.SkillType.Passive)
+    {
+      passiveObj.SetActive(true);
     }
 
     skillNameText.text = _skillName;

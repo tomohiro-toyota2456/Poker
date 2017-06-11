@@ -79,9 +79,9 @@ public class UserDB : DataBase
     {
       SkillSlot slot;
 
-      slot.skillSlot1 = "s00001";
-      slot.skillSlot2 = "s00002";
-      slot.skillSlot3 = "s00003";
+      slot.skillSlot1 = "";
+      slot.skillSlot2 = "";
+      slot.skillSlot3 = "";
       slot.skillSlot4 = "";
 
       userData.skillSlot = slot;
@@ -132,9 +132,49 @@ public class UserDB : DataBase
     return userData.skillSlot;
   }
 
+  //0スタート
+  public string GetSkillIdFromSkillSlot(int _slotIdx)
+  {
+    switch(_slotIdx)
+    {
+      case 0:
+        return userData.skillSlot.skillSlot1;
+      case 1:
+        return userData.skillSlot.skillSlot2;
+      case 2:
+        return userData.skillSlot.skillSlot3;
+      case 3:
+        return userData.skillSlot.skillSlot4;
+    }
+    return null;
+  }
+
   public void SetSkillSlot(SkillSlot _skillSlot)
   {
     userData.skillSlot = _skillSlot;
+  }
+
+  //0スタート
+  public void SetSkillSlot(int _slotIdx,string _skillId)
+  {
+    switch (_slotIdx)
+    {
+      case 0:
+        userData.skillSlot.skillSlot1 = _skillId;
+        break;
+
+      case 1:
+        userData.skillSlot.skillSlot2 = _skillId;
+        break;
+
+      case 2:
+        userData.skillSlot.skillSlot3 = _skillId;
+        break;
+
+      case 3:
+        userData.skillSlot.skillSlot4 = _skillId;
+        break;
+    }
   }
 
   public void SetLoginDate(string _date)

@@ -48,7 +48,7 @@ public class SkillShopManager : MonoBehaviour
     {
       var product = shopList[i];
       var skillData = masterSkillDB.GetData(product.SkillId);
-      listManager.AddItem(product.SkillId, skillData.SkillName, skillData.Dist, skillData.CoolTime, product.Value);
+      listManager.AddItem(product.SkillId, skillData.SkillName, skillData.Dist, skillData.CoolTime,skillData.Type, product.Value);
     }
 
   }
