@@ -50,4 +50,14 @@ public class HaveSkillDB : DataBase
     }
   }
 
+  public string[] GetDataArray()
+  {
+    return haveList.list.ToArray();
+  }
+
+  public List<string> GetDataList()
+  {
+    return haveList.list.ToList();
+  }
+
 }

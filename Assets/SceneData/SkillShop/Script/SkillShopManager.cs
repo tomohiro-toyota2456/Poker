@@ -2,27 +2,54 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Common;
+using Common.DataBase;
+using System.Linq;
 
 public class SkillShopManager : MonoBehaviour
 {
   [SerializeField]
   SkillShopListManager listManager;
 
+  HaveSkillDB haveSkillDB;
+  MasterSkillShopDB masterSkillShopDB;
+  MasterSkillDB masterSkillDB;
 	// Use this for initialization
 	void Start ()
   {
+    haveSkillDB = DataBaseManager.Instance.GetDataBase<HaveSkillDB>();
+    masterSkillShopDB = DataBaseManager.Instance.GetDataBase<MasterSkillShopDB>();
+    masterSkillDB = DataBaseManager.Instance.GetDataBase<MasterSkillDB>();
 
-    listManager.AddItem("s00001", "aaaa", "dpff", 1, 200000);
-    listManager.AddItem("s00001", "abaaa", "dp3ff", 1, 400);
-    listManager.AddItem("s00001", "caaaa", "dp3ff", 1, 200);
-    listManager.AddItem("s00001", "daaaa", "2dpff", 3, 200);
-    listManager.AddItem("s00001", "eaaaa", "2dpff", 1, 200);
+    InitList();
+
     SceneChanger.Instance.IsInitialize = true;
 		
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+
+  public void InitList()
+  {
+    List<string> idList = haveSkillDB.GetDataList();
+
+    var shopList = masterSkillShopDB.GetProductList().Where(data =>
+    {
+      for (int i = 0; i < idList.Count; i++)
+      {
+        if (data.SkillId == idList[i])
+        {
+          idList.RemoveAt(i);
+          return false;
+        }
+      }
+
+      return true;
+    }).ToArray();
+
+    for(int i = 0; i < shopList.Length; i++)
+    {
+      var product = shopList[i];
+      var skillData = masterSkillDB.GetData(product.SkillId);
+      listManager.AddItem(product.SkillId, skillData.SkillName, skillData.Dist, skillData.CoolTime, product.Value);
+    }
+
+  }
 }
