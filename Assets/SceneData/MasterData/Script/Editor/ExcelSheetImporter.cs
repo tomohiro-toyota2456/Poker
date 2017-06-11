@@ -12,6 +12,7 @@ public class ExcelSheetImporter : EditorWindow
   static string itemDataExcelPath = "";
   static string shopDataExcelPath = "";
   static string exchangeShopDataExcelPath = "";
+  static string skillShopDataExcelPath = "";
 
   static string DataPath = "Assets/SceneData/MasterData/Data/";
 
@@ -22,6 +23,7 @@ public class ExcelSheetImporter : EditorWindow
     itemDataExcelPath = excelPath + "ItemData.xlsx";
     shopDataExcelPath = excelPath + "ShopData.xlsx";
     exchangeShopDataExcelPath = excelPath + "ExchangeShopData.xlsx";
+    skillShopDataExcelPath = excelPath + "SkillShopData.xlsx";
 
     var window = GetWindow<ExcelSheetImporter>();
   }
@@ -60,6 +62,14 @@ public class ExcelSheetImporter : EditorWindow
       if (GUILayout.Button("CreateExchangeShopData"))
       {
         CreateExchangeShopData();
+      }
+
+      EditorGUILayout.LabelField("SkillShopDataExcelPath");
+      skillShopDataExcelPath = GUILayout.TextField(skillShopDataExcelPath);
+
+      if (GUILayout.Button("CreateSkillShopData"))
+      {
+        CreateSkillShopData();
       }
 
     }
@@ -278,4 +288,48 @@ public class ExcelSheetImporter : EditorWindow
     Debug.Log("CreateAssetFinish");
     reader.Close();
   }
+
+  void CreateSkillShopData()
+  {
+    ExcelReader reader = new ExcelReader();
+    reader.Open(skillShopDataExcelPath);
+    reader.SetSheet("シート1");
+    List<SkillProductData> list = new List<SkillProductData>();
+
+
+    int cnt = 1;
+    while (true)
+    {
+      string productId = reader.GetCellData(cnt, 0);
+
+      if (string.IsNullOrEmpty(productId))
+      {
+        break;
+      }
+
+      string skillId = reader.GetCellData(cnt, 1);
+      string value = reader.GetCellData(cnt, 2);
+
+
+      SkillProductData productData = CreateInstance<SkillProductData>();
+      productData.SkillId = skillId;
+      productData.ProductId = productId;
+      productData.Value = int.Parse(value);
+      AssetDatabase.CreateAsset(productData, DataPath + "SkillShopData/" + productData.ProductId + ".asset");
+
+      list.Add(productData);
+
+      cnt++;
+    }
+
+    MasterSkillShopData master = CreateInstance<MasterSkillShopData>();
+    master.SkillProductDataArray = list.ToArray();
+
+    AssetDatabase.CreateAsset(master, DataPath + "SkillShopData/MasterData/SkillShopMaster.asset");
+
+    Debug.Log("CreateAssetFinish");
+    reader.Close();
+
+  }
+
 }

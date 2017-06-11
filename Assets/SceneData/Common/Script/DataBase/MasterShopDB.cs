@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Common.DataBase;
+using System.Linq;
 
 public class MasterShopDB : DataBase
 {
@@ -18,7 +19,7 @@ public class MasterShopDB : DataBase
 
   public ProductData[] GetDataArray()
   {
-    return clone.ProductDataArray;
+    return clone.ProductDataArray.ToArray();
   }
 
 }
