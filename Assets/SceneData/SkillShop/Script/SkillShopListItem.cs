@@ -54,12 +54,11 @@ public class SkillShopListItem : MonoBehaviour
 
     var pp = ppManager.Create<SkillBuyConfirmPopup>(skillBuyConfirmPopup);
     pp.Init(_skillName, _skillDist, _value,userDB.GetCoin(), () =>
-       {/*
+       {
          haveSkillDB.SetData(_skillId);
          userDB.CalcCoin(-_value);
          haveSkillDB.Save();
          userDB.SaveHaveCoin();
-         */
          gameObject.SetActive(false);//親オブジェクトがこのスクリプトをつけている前提
        });
 
