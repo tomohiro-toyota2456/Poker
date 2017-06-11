@@ -26,10 +26,17 @@ public class SkillSetManager : MonoBehaviour
     for(int i = 0; i < idArray.Length; i++)
     {
       var skillData = masterSkillDB.GetData(idArray[i]);
-      manager.AddItem(idArray[i], skillData.SkillName, skillData.CoolTime, skillData.Type, null, -1);
+      manager.AddItem(idArray[i], skillData.SkillName, skillData.CoolTime, skillData.Type,SetSkill , -1);
     }
 
     SceneChanger.Instance.IsInitialize = true;
+  }
+
+  public void SetSkill(string _skillId,SkillListItem _item)
+  {
+    //今はとりあえずセットするだけ
+    userDB.SetSkillSlot(slotId, _skillId);
+    userDB.SaveSkillSlot();
   }
 	
 }
