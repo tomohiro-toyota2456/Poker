@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using System.Linq;
 
 public class SkillListManager : MonoBehaviour
 {
@@ -9,6 +10,8 @@ public class SkillListManager : MonoBehaviour
   GameObject root;
   [SerializeField]
   SkillListItem item;
+
+  List<SkillListItem> itemList = new List<SkillListItem>();
 
   public void AddItem(string _skillId, string _skillName, int _coolTime, SkillData.SkillType _type, Action<string, SkillListItem> _setAction, int _setSlot = -1)
   {
@@ -18,6 +21,13 @@ public class SkillListManager : MonoBehaviour
     listItem.transform.localPosition = Vector3.zero;
 
     listItem.Init(_skillId, _skillName, _coolTime, _type, _setAction, _setSlot);
+    itemList.Add(listItem);
   }
+
+  public SkillListItem SearchItem(int _setSlot)
+  {
+    return itemList.FirstOrDefault(data => data.SetSlot == _setSlot);
+  }
+
 
 }

@@ -20,9 +20,12 @@ public class SkillListItem : MonoBehaviour
   [SerializeField]
   Button skillSetButton;
 
+  int setSlot = -1;
+  public int SetSlot { get { return setSlot; } set { setSlot = value; }}
   //-1ならセットされてない
   public void Init(string _skillId,string _skillName,int _coolTime,SkillData.SkillType _type,Action<string,SkillListItem> _setAction,int _setSlot = -1)
   {
+    setSlot = _setSlot;
     skillNameText.text = _skillName;
     skillCoolTimeNumText.text = _coolTime.ToString();
 
@@ -49,7 +52,7 @@ public class SkillListItem : MonoBehaviour
       return;
     }
 
-    skillSetText.text = "スロット" + _setSlot.ToString() + "にセットされています";
+    skillSetText.text = "スロット" + (_setSlot+1).ToString() + "にセットされています";
   }
 
 }
