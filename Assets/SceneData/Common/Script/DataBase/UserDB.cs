@@ -17,6 +17,7 @@ public class UserDB : DataBase
   string loginStoreKey = "u0u-3dj-9[3r32hjr[2";
   string seKey = "ki00j0kwjq[3021.12";
   string bgmKey = "2wfwqfq-m2[[b";
+  string exchangeShopRandomStateKey = "ojwfoqfiqhwfg@.[]/@[";
 
   public struct UserData
   {
@@ -27,6 +28,13 @@ public class UserDB : DataBase
     public SkillSlot skillSlot;
     public float bgmVol;
     public float seVol;
+    public ExchangeRandomInfo exRandomInfo;//換金所のランダムシード
+  }
+
+  [System.Serializable]
+  public struct ExchangeRandomInfo
+  {
+    public UnityEngine.Random.State exchangeShopRandomState;
   }
 
   public struct SkillSlot
@@ -89,6 +97,13 @@ public class UserDB : DataBase
     else
     {
       userData.skillSlot = JsonUtility.FromJson<SkillSlot>(json);
+    }
+
+    json = PlayerPrefs.GetString(exchangeShopRandomStateKey, "");
+
+    if(!string.IsNullOrEmpty(json))
+    {
+      userData.exRandomInfo = JsonUtility.FromJson<ExchangeRandomInfo>(json);
     }
 
 
@@ -217,6 +232,18 @@ public class UserDB : DataBase
     return userData.bgmVol;
   }
 
+  public void SetExchangeShopRandomState(UnityEngine.Random.State state)
+  {
+    userData.exRandomInfo.exchangeShopRandomState = state;
+  }
+
+  public UnityEngine.Random.State GetExchangeShopRandomState()
+  {
+    return userData.exRandomInfo.exchangeShopRandomState;
+  }
+
+  //Save
+
   public void SaveHaveMoney()
   {
     PlayerPrefs.SetString(haveMoneyKey, userData.haveMoney.ToString());
@@ -253,6 +280,12 @@ public class UserDB : DataBase
     PlayerPrefs.SetFloat(bgmKey, userData.bgmVol);
   }
 
+  public void SaveExchangeShopRandomState()
+  {
+    string json = JsonUtility.ToJson(userData.exRandomInfo);
+    PlayerPrefs.SetString(exchangeShopRandomStateKey, json);
+  }
+
   public void AllSave()
   {
     SaveHaveCoin();
@@ -262,6 +295,7 @@ public class UserDB : DataBase
     SaveSkillSlot();
     SaveBgmVol();
     SaveSeVol();
+    SaveExchangeShopRandomState();
   }
 
   public void DeleteUserData()

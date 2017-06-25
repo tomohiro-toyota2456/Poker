@@ -19,5 +19,4 @@ public class MasterExchangeShopDB : DataBase
   {
     return clone.ExchangeProductDataArray;
   }
-
 }
