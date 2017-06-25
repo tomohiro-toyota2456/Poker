@@ -29,7 +29,7 @@ public class ExchangeShopManager : MonoBehaviour
     var haveDB = DataBaseManager.Instance.GetDataBase<HaveItemDB>();
 
     var dataArray = exchangeDB.GetDataArray();
-    for (int i = 0; i < 8; i++)
+    for (int i = 0; i < dataArray.Length; i++)
     {
       string itemId = dataArray[i].ItemId;
       string itemName = itemDB.GetData(itemId).ItemName;
@@ -75,5 +75,18 @@ public class ExchangeShopManager : MonoBehaviour
     //一日たっていない場合はユーザーデータのstateを利用し、同じ結果を出す
     UnityEngine.Random.state = userDB.GetExchangeShopRandomState();
     return UnityEngine.Random.Range(_min, _max + 1); 
+  }
+
+  //ランダムのステートを更新＋表示更新
+  public void ChangeSellVal()
+  {
+    userDB.SetExchangeShopRandomState(UnityEngine.Random.state);
+    userDB.SaveExchangeShopRandomState();
+
+    var dataArray = exchangeDB.GetDataArray();
+    for (int i = 0; i < dataArray.Length; i++)
+    {
+      sellValArray[i].text = CalcSellValFromUserData(dataArray[i].MinVal, dataArray[i].MaxVal).ToString();
+    }
   }
 }
