@@ -13,13 +13,14 @@ public class ShopManager : MonoBehaviour
     	//適当に
     	SceneChanger.Instance.IsInitialize = true;
 		ShopData = DataBaseManager.Instance.GetDataBase<MasterShopDB> ();
-
-		itemData_ = ShopData.GetDataArray ();
-		foreach (var item in itemData_) 
+		ItemDataDB = DataBaseManager.Instance.GetDataBase<MasterItemDB> ();
+		itemCellData_ = ShopData.GetDataArray ();
+		foreach (var item in itemCellData_) 
 		{
 			GameObject itemObj = (GameObject)Instantiate(cell);
+			ItemData itemData = ItemDataDB.GetData (item.ItemId);
 			itemObj.transform.SetParent (content,false);
-			itemObj.GetComponent<Item> ().SetUp (item);
+			itemObj.GetComponent<Item> ().SetUp (itemData,item.Value);
 			itemList.Add (itemObj);
 		}
 	}
@@ -36,6 +37,7 @@ public class ShopManager : MonoBehaviour
 
 	private List<GameObject> itemList = new List<GameObject> ();
 	private MasterShopDB ShopData;
-	private ProductData[] itemData_;
+	private MasterItemDB ItemDataDB;
+	private ProductData[] itemCellData_;
 
 }

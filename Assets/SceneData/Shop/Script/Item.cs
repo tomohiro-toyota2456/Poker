@@ -10,12 +10,12 @@ namespace ShopItem
 		public Text itemName { get { return itemName_;} set{ itemName_ = value;}}
 		public int itemValue{ get { return itemValue_; } }
 
-		public void SetUp(ProductData item)
+		public void SetUp(ItemData item , int value)
 		{
-			itemName_.text = item.name;
+			itemName_.text = item.ItemName;
 			itemId_ = item.ItemId;
-			itemValue_ = item.Value;
-
+			itemValue_ = value;
+			money_.text = itemValue_.ToString () + "円";
 		}
 
 		[SerializeField]
