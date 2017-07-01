@@ -15,18 +15,22 @@ public class ExchangeShopManager : MonoBehaviour
   TextMeshProUGUI[] sellTitleArray = new TextMeshProUGUI[8];
   [SerializeField]
   TextMeshProUGUI[] sellValArray = new TextMeshProUGUI[8];
+  [SerializeField]
+  ShopComfirmPopup shopComfirmPopup;
 
 
   MasterExchangeShopDB exchangeDB;
+  MasterItemDB itemDB;
+  HaveItemDB haveDB;
   UserDB userDB;
 
 	// Use this for initialization
 	void Start ()
   {
     userDB = DataBaseManager.Instance.GetDataBase<UserDB>();
-    var itemDB = DataBaseManager.Instance.GetDataBase<MasterItemDB>();
+    itemDB = DataBaseManager.Instance.GetDataBase<MasterItemDB>();
     exchangeDB = DataBaseManager.Instance.GetDataBase<MasterExchangeShopDB>();
-    var haveDB = DataBaseManager.Instance.GetDataBase<HaveItemDB>();
+    haveDB = DataBaseManager.Instance.GetDataBase<HaveItemDB>();
 
     var dataArray = exchangeDB.GetDataArray();
     for (int i = 0; i < dataArray.Length; i++)
@@ -37,7 +41,7 @@ public class ExchangeShopManager : MonoBehaviour
 
       sellTitleArray[i].text = itemName;
       sellValArray[i].text = CalcSellValFromUserData(dataArray[i].MinVal, dataArray[i].MaxVal).ToString();
-      listManager.AddList(itemId, itemName, haveNum, null);
+      listManager.AddList(itemId, itemName, haveNum,OpenCellConfirmPopup);
     }
 
     SceneChanger.Instance.IsInitialize = true;
@@ -88,5 +92,23 @@ public class ExchangeShopManager : MonoBehaviour
     {
       sellValArray[i].text = CalcSellValFromUserData(dataArray[i].MinVal, dataArray[i].MaxVal).ToString();
     }
+  }
+
+  void OpenCellConfirmPopup(ExchangeShopListItem item)
+  {
+    var pp = PopupManager.Instance.Create<ShopComfirmPopup>(shopComfirmPopup);
+
+    var data = itemDB.GetData(item.Id);
+    var exData = exchangeDB.GetData(item.Id);
+    string itemName = data.ItemName;
+    string itemDesc = data.Dist;
+    int value = CalcSellValFromUserData(exData.MinVal, exData.MaxVal); 
+    long haveMoney = userDB.GetMoney();
+    int haveNum = haveDB.GetData(item.Id).num;
+    Sprite sprite = ResourcesLoader.LoadItemSprite(item.Id);
+
+    pp.Init(itemName, itemDesc, sprite, ShopComfirmPopup.ShopType.Sell, haveMoney, haveNum, value, null);
+
+    PopupManager.Instance.OpenPopup(pp, null);
   }
 }

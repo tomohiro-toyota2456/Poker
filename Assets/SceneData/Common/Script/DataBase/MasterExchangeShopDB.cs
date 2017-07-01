@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Common.DataBase;
+using System.Linq;
 
 public class MasterExchangeShopDB : DataBase
 {
@@ -18,5 +19,10 @@ public class MasterExchangeShopDB : DataBase
   public ExchangeProductData[] GetDataArray()
   {
     return clone.ExchangeProductDataArray;
+  }
+
+  public ExchangeProductData GetData(string itemId)
+  {
+    return clone.ExchangeProductDataArray.FirstOrDefault(_ => _.ItemId == itemId);
   }
 }
