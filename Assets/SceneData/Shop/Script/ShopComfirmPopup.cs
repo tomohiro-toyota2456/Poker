@@ -230,7 +230,7 @@ public class ShopComfirmPopup : PopupBase
   void UpdateDigit()
   {
     int ten = selectNum / 10;
-    int one = selectNum - ten;
+    int one = selectNum - ten *10;
 
     oneDigitNum.text = one.ToString();
     tenDigitNum.text = ten.ToString();

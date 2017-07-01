@@ -94,6 +94,7 @@ public class ExchangeShopManager : MonoBehaviour
     }
   }
 
+  //ポップアップ表示
   void OpenCellConfirmPopup(ExchangeShopListItem item)
   {
     var pp = PopupManager.Instance.Create<ShopComfirmPopup>(shopComfirmPopup);
@@ -107,8 +108,25 @@ public class ExchangeShopManager : MonoBehaviour
     int haveNum = haveDB.GetData(item.Id).num;
     Sprite sprite = ResourcesLoader.LoadItemSprite(item.Id);
 
-    pp.Init(itemName, itemDesc, sprite, ShopComfirmPopup.ShopType.Sell, haveMoney, haveNum, value, null);
+    pp.Init(itemName, itemDesc, sprite, ShopComfirmPopup.ShopType.Sell, haveMoney, haveNum, value,(num)=>
+    {
+      FinishSellAction(num, value,item);
+    });
 
     PopupManager.Instance.OpenPopup(pp, null);
+  }
+
+  void FinishSellAction(int num,int price, ExchangeShopListItem item)
+  {
+    long after = (long)num * (long)price;
+    long money = userDB.GetMoney() + after;
+
+    userDB.SetMoney(money);
+    haveDB.CalcItemNum(item.Id,-num);
+
+    item.UpdateHaveNumText(haveDB.GetData(item.Id).num);
+
+    userDB.SaveHaveMoney();
+    haveDB.Save();
   }
 }

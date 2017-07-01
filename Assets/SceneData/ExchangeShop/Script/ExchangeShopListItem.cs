@@ -38,4 +38,8 @@ public class ExchangeShopListItem : MonoBehaviour
       }).AddTo(gameObject);
   }
 
+  public void UpdateHaveNumText(int num)
+  {
+    haveNumText.text = num.ToString();
+  }
 }
