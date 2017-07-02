@@ -22,7 +22,7 @@ using UnityEngine;
       case HandChecker.HandType.TwoPair:
         return 1.0f;
       case HandChecker.HandType.ThreeCard:
-        return 1.0f;
+        return 2.0f;
       case HandChecker.HandType.Straight:
         return 3.0f;
       case HandChecker.HandType.Flush:
