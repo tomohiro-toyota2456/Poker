@@ -41,6 +41,10 @@ public class GameManager : MonoBehaviour
   GameObject blockSheet;
   [SerializeField]
   GameObject keepOutObj;
+  [SerializeField]
+  Button roleButton;
+  [SerializeField]
+  Button handViewButton;
 
   HandChecker handChecker;　
   TrumpDistributeManager distributeManager;//配る用スクリプト
@@ -80,8 +84,8 @@ public class GameManager : MonoBehaviour
   EnemySkillData eSkillData;
   SkillData passiveSkillData = null;
 
-	// Use this for initialization
-	void Start ()
+  // Use this for initialization
+  void Start()
   {
     //ゲームで使うデータのロード
     gameUserData.LoadUserDB(DataBaseManager.Instance.GetDataBase<UserDB>());
@@ -89,6 +93,18 @@ public class GameManager : MonoBehaviour
 
     SetViewBetCoin(gameUserData.BetCoin);
     SetViewHaveCoin(gameUserData.HaveCoin);
+
+    roleButton.OnClickAsObservable()
+      .Subscribe(_ =>
+      {
+        gamePopupManager.OpenRolePopup();
+      }).AddTo(gameObject);
+
+    handViewButton.OnClickAsObservable()
+      .Subscribe(_ =>
+      {
+        gamePopupManager.OpenHandViewPopup();
+      }).AddTo(gameObject);
 
     //トランプ配布機能の作成
     distributeManager = new TrumpDistributeManager();
