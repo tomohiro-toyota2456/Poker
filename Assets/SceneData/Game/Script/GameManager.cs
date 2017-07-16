@@ -69,6 +69,7 @@ public class GameManager : MonoBehaviour
 
   public enum GamePhase
   {
+    Tutorial,
     Bet,//賭ける
     TrumpInit,
     EnemySkill,//ディーラースキル発動かどうか
@@ -88,7 +89,8 @@ public class GameManager : MonoBehaviour
   void Start()
   {
     //ゲームで使うデータのロード
-    gameUserData.LoadUserDB(DataBaseManager.Instance.GetDataBase<UserDB>());
+    var userDB = DataBaseManager.Instance.GetDataBase<UserDB>();
+    gameUserData.LoadUserDB(userDB);
     masterSkillDB = DataBaseManager.Instance.GetDataBase<MasterSkillDB>();
 
     SetViewBetCoin(gameUserData.BetCoin);
@@ -117,8 +119,25 @@ public class GameManager : MonoBehaviour
 
     SetSkill();
     playerSkillView.SetActiveSkillView(false);
-    //最初のフェーズへ
-    ChangePhase(gamePhase);
+
+    //チュートリアルフラグ確認
+    var flags = userDB.GetTutorialFlagInfo();
+    if(flags.isGameMainIn)
+    {
+      flags.isGameMainIn = false;
+      gamePopupManager.OpenRolePopup(()=>
+      {
+        ChangePhase(gamePhase);
+        userDB.SetTutorialFlagInfo(flags);
+        userDB.SaveTutorialFlagInfo();
+      });
+      
+    }
+    else
+    {
+      //最初のフェーズへ
+      ChangePhase(gamePhase);
+    }
     SceneChanger.Instance.IsInitialize = true;
 	}
 

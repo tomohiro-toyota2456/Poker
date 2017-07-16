@@ -101,16 +101,18 @@ public class GamePopupManager : MonoBehaviour
     popupManager.OpenPopup(pp, null);
   }
 
-  void OpenPagePopup(PagePopupData _data)
+  void OpenPagePopup(PagePopupData _data, Action _closeAction = null)
   {
     var pp = popupManager.Create<PagePopup>(pagePopup);
     pp.SetData(_data);
-    popupManager.OpenPopup(pp, null);
+    pp.SetCloseAction(_closeAction);
+    popupManager.OpenPopup(pp,null);
+
   }
 
-  public void OpenRolePopup()
+  public void OpenRolePopup(Action _closeAction = null)
   {
-    OpenPagePopup(roleData);
+    OpenPagePopup(roleData,_closeAction);
   }
 
   public void OpenHandViewPopup()

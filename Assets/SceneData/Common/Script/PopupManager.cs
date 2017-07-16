@@ -34,12 +34,12 @@
       return obj;
     }
 
-    public void OpenPopup(PopupBase _ppBase,Action _endAction)
+    public void OpenPopup(PopupBase _ppBase,Action _openEndAction)
     {
       cover.SetActive(true);
       Action coverDisable = () => { cover.SetActive(false); };
       _ppBase.AddCloseEndAction(coverDisable);
-      _ppBase.Open(_endAction);
+      _ppBase.Open(_openEndAction);
     }
 
   }

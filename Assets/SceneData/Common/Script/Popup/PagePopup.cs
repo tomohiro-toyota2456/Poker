@@ -6,6 +6,7 @@
   using UniRx;
   using UnityEngine.UI;
   using TMPro;
+  using System;
 
   public class PagePopup : PopupBase
   {
@@ -66,6 +67,11 @@
       curPage = 0;
       maxPage = data.DataArray.Length;
       UpdateData(curPage);
+    }
+
+    public void SetCloseAction(Action _closeAction)
+    {
+      base.AddCloseEndAction(_closeAction);
     }
 
     void UpdateData(int _idx)

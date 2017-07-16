@@ -18,6 +18,7 @@ public class UserDB : DataBase
   string seKey = "ki00j0kwjq[3021.12";
   string bgmKey = "2wfwqfq-m2[[b";
   string exchangeShopRandomStateKey = "ojwfoqfiqhwfg@.[]/@[";
+  string tutorialKey = "eowjfeofkjwfk4545215415318";
 
   public struct UserData
   {
@@ -29,6 +30,7 @@ public class UserDB : DataBase
     public float bgmVol;
     public float seVol;
     public ExchangeRandomInfo exRandomInfo;//換金所のランダムシード
+    public TutorialFlagInfo tutorialFlagInfo;
   }
 
   [System.Serializable]
@@ -43,6 +45,16 @@ public class UserDB : DataBase
     public string skillSlot2;
     public string skillSlot3;
     public string skillSlot4;
+  }
+
+  public struct TutorialFlagInfo
+  {
+    public bool isGameStart;//初回ログイン
+    public bool isShopIn;//初回ショップ遷移
+    public bool isSkillShopIn;//初回スキルショップ遷移
+    public bool isExchangeShopIn;//初回換金所遷移
+    public bool isSkillSetIn;//初回スキルセット画面遷移
+    public bool isGameMainIn;//初回ポーカーゲーム遷移
   }
 
   public bool IsExistData()
@@ -104,6 +116,22 @@ public class UserDB : DataBase
     if(!string.IsNullOrEmpty(json))
     {
       userData.exRandomInfo = JsonUtility.FromJson<ExchangeRandomInfo>(json);
+    }
+
+    json = PlayerPrefs.GetString(tutorialKey, "");
+
+    if(string.IsNullOrEmpty(json))
+    {
+      userData.tutorialFlagInfo.isExchangeShopIn = true;
+      userData.tutorialFlagInfo.isGameMainIn = true;
+      userData.tutorialFlagInfo.isGameStart = true;
+      userData.tutorialFlagInfo.isShopIn = true;
+      userData.tutorialFlagInfo.isSkillSetIn = true;
+      userData.tutorialFlagInfo.isSkillShopIn = true;
+    }
+    else
+    {
+      userData.tutorialFlagInfo = JsonUtility.FromJson<TutorialFlagInfo>(json);
     }
 
 
@@ -242,6 +270,15 @@ public class UserDB : DataBase
     return userData.exRandomInfo.exchangeShopRandomState;
   }
 
+  public TutorialFlagInfo GetTutorialFlagInfo()
+  {
+    return userData.tutorialFlagInfo;
+  }
+
+  public void SetTutorialFlagInfo(TutorialFlagInfo info)
+  {
+    userData.tutorialFlagInfo = info;
+  }
   //Save
 
   public void SaveHaveMoney()
@@ -286,6 +323,12 @@ public class UserDB : DataBase
     PlayerPrefs.SetString(exchangeShopRandomStateKey, json);
   }
 
+  public void SaveTutorialFlagInfo()
+  {
+    string json = JsonUtility.ToJson(userData.tutorialFlagInfo);
+    PlayerPrefs.SetString(tutorialKey, json);
+  }
+
   public void AllSave()
   {
     SaveHaveCoin();
@@ -296,6 +339,7 @@ public class UserDB : DataBase
     SaveBgmVol();
     SaveSeVol();
     SaveExchangeShopRandomState();
+    SaveTutorialFlagInfo();
   }
 
   public void DeleteUserData()
